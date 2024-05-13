@@ -14,3 +14,19 @@ class TestDie(unittest.TestCase):
         with self.subTest('invalid faces data'):
             faces = 'dog'
             self.assertRaisesRegex(diceroller.DieException, "faces has incorrect data type", diceroller.Die, faces)
+
+        with self.subTest('invalid advantage data, cannot be str'):
+            faces = 8
+            advantage = 'dog'
+            self.assertRaisesRegex(diceroller.DieException, "advantage has incorrect data type", diceroller.Die, faces, advantage)
+
+        with self.subTest('invalid advantage data, outside of expected int'):
+            faces = 8
+            advantage = 4
+            self.assertRaisesRegex(diceroller.DieException,"advantage has incorrect data type", diceroller.Die, faces, advantage)
+
+        with self.subTest('incorrect reroll_rules format'):
+            faces = 8
+            advantage = 0
+            reroll_rules = {}
+            self.assertRaisesRegex(diceroller.DieException, "reroll_rules has incorrect data format")

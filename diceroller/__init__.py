@@ -4,3 +4,4 @@ from diceroller.roll import Roll
 from diceroller.die import Die, DieException
 from diceroller.rollresult import RollResult
 from diceroller.rollconfig import RollConfig
+from diceroller.rerollrule import RerollRule
