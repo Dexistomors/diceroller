@@ -1,16 +1,22 @@
 class Die:
 
     def __init__(self, faces, advantage = 0, reroll_rules = []):
-        self.faces = faces
-        self.advantage = advantage
+        self.set_faces(faces)
+        self.set_advantage(advantage)
         self.reroll_rules = reroll_rules
         self.dieresult = None
 
     def set_faces(self, faces):
-        pass
+        if type(faces) == int:
+            self.faces = faces
+        else:
+            raise DieException("faces has incorrect data type")
 
     def set_advantage(self, advantage):
-        pass
+        if type(advantage) == int and (-1 <= advantage <= 1):
+            self.advantage = advantage
+        else:
+            raise DieException("advantage has incorrect data type")
 
     def add_reroll_rule(self, reroll_rule):
         pass
@@ -26,3 +32,6 @@ class Die:
 
     def get_die_result(self):
         pass
+
+class DieException(Exception):
+    pass

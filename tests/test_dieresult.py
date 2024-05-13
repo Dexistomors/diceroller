@@ -10,6 +10,7 @@ class TestDieResult(unittest.TestCase):
                 'test_uuid3' : 1,
             }
             final_value = 6
+            #Initializing an instance of the DieResult class
             test_dieresult = diceroller.DieResult(roll_values, final_value)
             self.assertTrue(hasattr(test_dieresult, "roll_values"))
             self.assertTrue(hasattr(test_dieresult, "final_value"))
