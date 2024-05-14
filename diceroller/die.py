@@ -1,4 +1,5 @@
 from diceroller.rerollrule import RerollRule
+import random
 
 class Die:
 
@@ -39,13 +40,18 @@ class Die:
         pass
 
     def roll(self):
-        pass
-
+        if self.dieresult is None:
+            self.dieresult = []
+        if type(self.faces) == int:
+            self.dieresult.append(random.randint(1,self.faces))
+        else:
+            raise DieException("roll has failed")
+        
     def reset(self):
-        pass
+        self.dieresult = None
 
     def get_die_result(self):
-        pass
+        return self.dieresult
 
 class DieException(Exception):
     pass
