@@ -16,17 +16,14 @@ class DieResult:
     def _validate_final_value(self):
         if type(self.final_value) != int:
             raise DieResultException("final_value is not int")
-        if self.final_value not in self.roll_values.values():
+        if self.final_value not in self.roll_values:
             raise DieResultException("final_value not in roll_values")
         
     def _validate_roll_values(self):
-        if type(self.roll_values) != dict:
-            raise DieResultException("roll_values is not dict")
-        if not all([type(key) == str for key in self.roll_values.keys()]):
-            raise DieResultException("roll_values keys must all be strings")
-        if not all([type(value) == int for value in self.roll_values.values()]):
-            raise DieResultException("roll_values values must be integers")    
-        
+        if type(self.roll_values) != list:
+            raise DieResultException("roll_values is not dict") 
+        if not all([type(value) == int for value in self.roll_values]):
+            raise DieResultException("roll_values values must be integers")
     
 class DieResultException(Exception):
     pass
