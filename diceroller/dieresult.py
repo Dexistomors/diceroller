@@ -1,7 +1,6 @@
 class DieResult:
     #my_dice_roll_result=DieResult(some_roll_values, the_final_result)
     def __init__(self, roll_values, final_value):
-        #{'die_id':die_result}
         self.roll_values = roll_values
         self.final_value = final_value
         self._validate_roll_values()
