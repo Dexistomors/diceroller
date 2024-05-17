@@ -12,11 +12,11 @@ class Die:
         self.dieresult = None
 
     def set_faces(self, faces):
-        if Die._validate_faces(self):
+        if Die._validate_faces(faces):
             self.faces = faces
 
     def set_advantage(self, advantage):
-        if Die._validate_advantage(self):
+        if Die._validate_advantage(advantage) is not None:
             self.advantage = advantage
 
     def set_reroll_rules(self, reroll_rules):
@@ -55,7 +55,7 @@ class Die:
     def remove_reroll_rule(self, reroll_rule):
         pass
 
-    def _rolladv(self):        
+    def _rolladv(self):    
         if type(self.faces) == int:
             roll1 = random.randint(1, self.faces)
             roll2 = random.randint(1, self.faces)
@@ -73,11 +73,12 @@ class Die:
 
     def _roll(self):
         if type(self.faces) == int:
-            self.dieresult.append(random.randint(1,self.faces))
+            roll1 = random.randint(1, self.faces)
+            roll_values = [roll1]
+            final_value = roll1
+            self.dieresult = DieResult(roll_values, final_value)
 
-    def roll2(self):
-        if self.dieresult is None:
-            self.dieresult = []
+    def roll(self):
         if self.advantage == 1:
             self._rolladv()
         elif self.advantage == 0:
@@ -86,16 +87,8 @@ class Die:
             self._rolldis()
         else:          
             raise DieException("advantage has unexpected variable")
+        return self.get_die_result()
 
-
-# add into function, private functions above to call in advantage
-    def roll(self):
-        if self.dieresult is None:
-            self.dieresult = []
-        if type(self.faces) == int:
-            self.dieresult.append(random.randint(1,self.faces))
-        else:
-            raise DieException("roll has failed")
         
     def reset(self):
         self.dieresult = None
