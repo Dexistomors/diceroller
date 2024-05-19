@@ -7,9 +7,7 @@ class RollResult:
         self.dice_results = dice_results
         self.modifiers = modifiers
         self.total = total
-
-    def serialize(self):
-        pass
-
-    def deserialize(self):
+        
+    ##Takes a RollResult object and returns a JSON string representing RollResult
+    def serialize():
         pass

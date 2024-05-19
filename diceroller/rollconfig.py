@@ -12,6 +12,7 @@ class RollConfig:
 
     def serialize(self):
         pass
-
-    def deserialize(self):
+    
+    ## Takes a JSON string and returns a RollConfig object
+    def deserialize(json_config):
         pass

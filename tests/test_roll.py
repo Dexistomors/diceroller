@@ -2,6 +2,32 @@ import unittest
 from context import diceroller
 from unittest.mock import patch
 
+
+valid_json = """{
+   "id": "789",
+   "dice": [
+      {
+            "id": "1234",
+            "faces": 20,
+            "advantage": 1,
+            "reroll_rules": []
+      },
+      {
+            "id": "5678",
+            "faces": 8,
+            "advantage": 0,
+            "reroll_rules": []
+      }
+   ],
+   "modifiers": [
+      1,
+      2,
+      3,
+      -4
+   ]
+}"""
+
+
 class TestRoll(unittest.TestCase):
    def test_init_roll(self):
       with self.subTest('valid instance'):   
@@ -25,7 +51,7 @@ class TestRoll(unittest.TestCase):
             self.assertRaisesRegex(diceroller.RollException, "die not Die", diceroller.Roll, dice, modifiers)
 
 
-   def test_init_roll(self):
+   def test_roll_result(self):
       with self.subTest('valid roll_result'):
             dice = [diceroller.Die(20)]
             modifiers = [1]
@@ -35,12 +61,11 @@ class TestRoll(unittest.TestCase):
 
     
 
-   def test_init_roll(self):
+   def test_result_and_final_value(self):
       def randint_min(min, max):
          return min
       def randint_max(min, max):
          return max
-        
         
       with patch('random.randint', randint_min), \
          self.subTest('valid get_roll_result and get_final_value min'):
@@ -62,7 +87,12 @@ class TestRoll(unittest.TestCase):
             test_roll_results = test_roll.roll()
             self.assertEqual(41, test_roll_results.total)
 
-            
-
-            
-            
+   def test_deserialize(self):
+      def randint_max(min, max):
+          return max
+      with patch('random.randint', randint_max), \
+         self.subTest('valid deserialize'):
+         test_roll = diceroller.Roll.deserialize(valid_json)
+         self.assertIsInstance(test_roll, diceroller.Roll)
+         test_roll_results = test_roll.roll()
+         self.assertEqual(30, test_roll_results.total)
