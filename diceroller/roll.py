@@ -43,39 +43,29 @@ class Roll:
     def add_die(self, die):
         self.dice.append(Roll._validate_die(die))
 
-    def remove_die(self, die):
-        pass
-
-    def edit_die(self, die):
-        pass
-
     def add_modifier(self, modifier):
         self.modifiers.append(Roll._validate_modifier)
 
-    def remove_modifier(self, modifier):
-        pass
-
-    def edit_modifier(self, modifier):
-        pass
-
     def roll(self):
-        dice_final_results = []
+        dice_results = []
         dice_final_value = sum(self.modifiers)
         for die in self.dice:
             diceresult = die.roll()
             dice_final_value = dice_final_value + diceresult.get_final_value()
-            dice_final_results.append(diceresult)
-        self.roll_result = RollResult(dice_final_results, self.modifiers, dice_final_value)
+            dice_results.append(diceresult)
+        self.roll_result = RollResult(dice_results, self.modifiers, dice_final_value)
         self.final_value = dice_final_value
+        return self.roll_result
 
     def reset(self):
-        pass
+        self.roll_result = None
+        self.final_value = None
 
     def get_roll_result(self):
-        pass
+        return self.roll_result
 
-    def get_final_result(self):
-        pass
+    def get_final_value(self):
+        return self.final_value
 
 class RollException(Exception):
     pass
