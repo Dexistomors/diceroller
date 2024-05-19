@@ -1,3 +1,4 @@
+import json
 import uuid
 from diceroller.die import Die
 from diceroller.rollresult import RollResult
@@ -66,6 +67,24 @@ class Roll:
 
     def get_final_value(self):
         return self.final_value
+    
+    ## Takes a JSON string and returns a Roll object
+    def deserialize(json_config):
+        try:
+            roll_config = json.loads(json_config)
+            id = roll_config.get('id')
+            dice = []
+            for dice_config in roll_config.get('dice'):
+                die_id = dice_config.get('id')
+                die_faces = dice_config.get('faces')
+                die_advantage = dice_config.get('advantage')
+                die_reroll_rules = dice_config.get('reroll_rules')
+                dice.append(Die(die_faces, die_advantage, die_reroll_rules))
+            modifiers = roll_config.get('modifiers')
+        except:
+            raise RollException("could not deserialize roll_config {}".format(json_config))
+        roll = Roll(dice, modifiers)
+        return roll
 
 class RollException(Exception):
     pass
