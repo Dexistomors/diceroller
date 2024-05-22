@@ -2,10 +2,12 @@ from diceroller.dieresult import DieResult
 from diceroller.rerollrule import RerollRule
 import uuid
 import random
+import json
 
 class Die:
 
     def __init__(self, faces, advantage = 0, reroll_rules = []):
+        self.id = str(uuid.uuid4())
         self.faces = Die._validate_faces(faces)
         self.advantage = Die._validate_advantage(advantage)
         self.reroll_rules = Die._validate_reroll_rules(reroll_rules)
@@ -95,6 +97,13 @@ class Die:
 
     def get_die_result(self):
         return self.dieresult
+    
+    def serialize(self):
+        try:
+            die = json.dumps(self)
+        except:
+            raise DieException("Could not serialize Die")
+        return die
 
 class DieException(Exception):
     pass

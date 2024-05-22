@@ -7,6 +7,7 @@ class TestDie(unittest.TestCase):
         with self.subTest('valid instance'):
             faces = 20
             test_die = diceroller.Die(faces)
+            self.assertTrue(hasattr(test_die, 'id'))
             self.assertTrue(hasattr(test_die, 'faces'))
             self.assertTrue(hasattr(test_die, 'advantage'))
             self.assertTrue(hasattr(test_die, 'reroll_rules'))
