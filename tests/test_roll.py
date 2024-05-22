@@ -1,6 +1,7 @@
 import unittest
 from context import diceroller
 from unittest.mock import patch
+import json
 
 
 valid_json = """{
@@ -96,3 +97,32 @@ class TestRoll(unittest.TestCase):
          self.assertIsInstance(test_roll, diceroller.Roll)
          test_roll_results = test_roll.roll()
          self.assertEqual(30, test_roll_results.total)
+      
+   def test_serialize(self):
+       def randint_max(min, max):
+           return max
+       with patch('random.randint', randint_max), \
+         self.subTest('valid reserialization'):
+           expected_dict = {"id": "823672c8-3632-40cd-af6e-3b4cdd1e38f4",
+                            "dice_results": [
+                              { "id": "123",
+                                 "roll_values": [20, 20],
+                                 "final_value": 20 },
+
+                              { "id": "123",
+                                 "roll_values": [10],
+                                 "final_value": 10 }
+                              ],
+                              "modifiers": [2, 3],
+                              "total": 35}
+
+           dice_results = [diceroller.DieResult([20, 20], 20), diceroller.DieResult([10], 10)]
+           modifiers = [2, 3]
+           total = 35
+           preserialized_roll_result = diceroller.RollResult(dice_results, modifiers, total)
+           postserialized_roll_result = preserialized_roll_result.serialize()
+           result_dict = json.loads(postserialized_roll_result)
+           self.assertEqual(type(expected_dict.get('id')), type(result_dict.get('id')))
+           self.assertEqual(expected_dict.get('dice_results'), result_dict.get('dice_results'))
+           self.assertEqual(expected_dict.get('modifiers'), result_dict.get('modifiers'))
+           self.assertEqual(expected_dict.get('total'), result_dict.get('total'))

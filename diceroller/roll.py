@@ -6,7 +6,7 @@ from diceroller.rollresult import RollResult
 class Roll:
 
     def __init__(self, dice, modifiers=[]):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.dice = Roll._validate_dice(dice)
         self.modifiers = Roll._validate_modifiers(modifiers)
         self.roll_result = None
