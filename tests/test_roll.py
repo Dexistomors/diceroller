@@ -116,10 +116,10 @@ class TestRoll(unittest.TestCase):
                               "modifiers": [2, 3],
                               "total": 35}
 
-           dice_results = [diceroller.DieResult([20, 20], 20), diceroller.DieResult([10], 10)]
+           dice_results = [diceroller.DieResult('123', [20, 20], 20), diceroller.DieResult('123', [10], 10)]
            modifiers = [2, 3]
            total = 35
-           preserialized_roll_result = diceroller.RollResult(dice_results, modifiers, total)
+           preserialized_roll_result = diceroller.RollResult('123', dice_results, modifiers, total)
            postserialized_roll_result = preserialized_roll_result.serialize()
            result_dict = json.loads(postserialized_roll_result)
            self.assertEqual(type(expected_dict.get('id')), type(result_dict.get('id')))

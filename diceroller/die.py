@@ -63,7 +63,7 @@ class Die:
             roll2 = random.randint(1, self.faces)
             roll_values = [roll1, roll2]
             final_value = max(roll1, roll2)
-            self.dieresult = DieResult(roll_values, final_value)
+            self.dieresult = DieResult(self.id, roll_values, final_value)
 
     def _rolldis(self):
         if type(self.faces) == int:
@@ -71,14 +71,14 @@ class Die:
             roll2 = random.randint(1, self.faces)
             roll_values = [roll1, roll2]
             final_value = min(roll1, roll2)
-            self.dieresult = DieResult(roll_values, final_value)
+            self.dieresult = DieResult(self.id, roll_values, final_value)
 
     def _roll(self):
         if type(self.faces) == int:
             roll1 = random.randint(1, self.faces)
             roll_values = [roll1]
             final_value = roll1
-            self.dieresult = DieResult(roll_values, final_value)
+            self.dieresult = DieResult(self.id, roll_values, final_value)
 
     def roll(self):
         if self.advantage == 1:

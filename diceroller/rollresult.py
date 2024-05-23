@@ -3,12 +3,12 @@ import json
 
 class RollResult:
 
-    def __init__(self, dice_results, modifiers, total):
-        self.id = str(uuid.uuid4())
+    def __init__(self, id, dice_results, modifiers, total):
+        self.id = id ##Need to validate id from roll
         self.dice_results = dice_results
         self.modifiers = modifiers
         self.total = total
-        ##Roll should cast roll's ID to self.id here
+        
     ##Takes a RollResult object and returns a JSON string representing RollResult
     def serialize(self):
         try:
