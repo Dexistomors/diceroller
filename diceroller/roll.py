@@ -54,7 +54,7 @@ class Roll:
             diceresult = die.roll()
             dice_final_value = dice_final_value + diceresult.get_final_value()
             dice_results.append(diceresult)
-        self.roll_result = RollResult(dice_results, self.modifiers, dice_final_value)
+        self.roll_result = RollResult(self.id, dice_results, self.modifiers, dice_final_value)
         self.final_value = dice_final_value
         return self.roll_result
 
