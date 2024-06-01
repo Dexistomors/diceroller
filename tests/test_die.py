@@ -7,6 +7,7 @@ class TestDie(unittest.TestCase):
         with self.subTest('valid instance'):
             faces = 20
             test_die = diceroller.Die(faces)
+            self.assertTrue(hasattr(test_die, 'id'))
             self.assertTrue(hasattr(test_die, 'faces'))
             self.assertTrue(hasattr(test_die, 'advantage'))
             self.assertTrue(hasattr(test_die, 'reroll_rules'))
@@ -41,20 +42,38 @@ class TestDie(unittest.TestCase):
             self.subTest("correct minimum roll and reset"):
             faces = 20
             test_die = diceroller.Die(faces)
+            test_results = test_die.roll()
+            self.assertEqual([1], test_results.get_roll_values())
             test_die.roll()
-            self.assertEqual([1], test_die.get_die_result())
-            test_die.roll()
-            self.assertEqual([1, 1], test_die.get_die_result())
+            self.assertEqual([1], test_results.get_roll_values())
             test_die.reset()
-            self.assertEqual(None, test_die.get_die_result())
-            
+            test_results = test_die.get_die_result()
+            self.assertIsNone(test_results)
+        
         with patch('random.randint', randint_max), \
             self.subTest("correct maximum roll and reset"):
             faces = 20
             test_die = diceroller.Die(faces)
-            test_die.roll()
-            self.assertEqual([20], test_die.get_die_result())
-            test_die.roll()
-            self.assertEqual([20, 20], test_die.get_die_result())
+            test_results = test_die.roll()
+            self.assertEqual([20], test_results.get_roll_values())
+            test_die.set_advantage(1)
+            test_results = test_die.roll()
+            self.assertEqual([20, 20], test_results.get_roll_values())
             test_die.reset()
-            self.assertEqual(None, test_die.get_die_result())
+            test_die.set_advantage(0)
+            test_results = test_die.roll()
+            self.assertEqual([20], test_results.get_roll_values())
+
+        with patch('random.randint', randint_min), \
+            self.subTest("correct disadvantage roll and reset"):
+            faces = 20
+            advantage = -1
+            test_die = diceroller.Die(faces, advantage)
+            test_results = test_die.roll()
+            self.assertEqual([1, 1], test_results.get_roll_values())
+            self.assertEqual(1, test_results.get_final_value())
+            test_die.reset()
+            test_results = test_die.get_die_result()
+            self.assertIsNone(test_results)
+            test_results = test_die.roll()
+            self.assertEqual(1, test_results.get_final_value())
