@@ -1,0 +1,172 @@
+{% extends './base.html' %}
+
+{% block title %}
+    My DMRoller
+{% endblock %}
+
+{% block content %}
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#roll_request_form").on("submit", function(event) {
+            event.preventDefault(); //prevents page from reloading on form submit
+            var formValues = $(this).serialize();
+            //Submits post to 'roll' url with serialized formValues, callback will put results in div with id #result
+            $.post("{% url 'api_roll' %}", formValues, function(roll_result) {
+                $("#roll_result").html(roll_result);
+            })
+        })
+    })
+
+    var dynamic_input_count = 1;
+    function adddie() {
+        dynamic_input_count++;
+
+        var input_div = $("#die_list");
+        var new_input_id = "die_" + dynamic_input_count;
+        var new_p = document.createElement("p");
+        
+        new_p.textContent = "Faces: ";
+
+        var new_input = document.createElement("input");
+        new_input.setAttribute("id", new_input_id);
+        new_input.setAttribute("type", "number");
+        new_input.setAttribute("class", "intinput");
+        new_input.setAttribute("min", "2");
+
+        new_p.append(new_input);
+        input_div.append(new_p);
+
+        var new_p2 = document.createElement("p");
+        new_p2.innerHTML = "Advantage:<br>";
+        const advantage = {
+            "Disadvantage": false,
+            "No Advantage": false,
+            "Advantage": false,
+        }
+        for (let key in advantage) {
+            let label = document.createElement("label");
+            label.innerText = key;
+            label.setAttribute("class", "listfont");
+            label.setAttribute("for", "advantage");
+
+            let input = document.createElement("input");
+            input.setAttribute("id", new_input_id);
+            input.setAttribute("class", "radio");
+            input.setAttribute("name", "advantage");
+            input.type = "radio";
+            input.name = new_input_id;
+
+            input.addEventListener('change', () => {
+                Object.keys(data).forEach(key => {
+                    data[key] = false;
+                })
+                data[key] = true;
+            });
+
+            new_p2.appendChild(input);
+            new_p2.appendChild(label);
+        }
+        input_div.append(new_p2);
+    }
+    function addmodifier() {
+        var input_div = $("#modifier_list");
+        var new_p = document.createElement("p");
+        
+        new_p.textContent = "Modifier: ";
+
+        var new_input = document.createElement("input");
+        new_input.setAttribute("type", "number");
+        new_input.setAttribute("class", "intinput");
+
+        new_p.append(new_input);
+        input_div.append(new_p);
+    }
+</script>
+<body>    
+
+    <div class="container">
+
+        <div class="top subcontainer">            
+            <center>The Dire-pigeon lunges and attacks</center>        
+            <center>Defend your seed!</center>
+        </div>
+
+        <div class="top2 subcontainer">
+            <div class="greeting">
+                Welcome, {{ user.username }}! let's roll some dice!
+            </div>
+        
+            <div class="logout">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="dice interact subcontainer">
+            <form method="post" action="{% url 'api_roll' %}" id="roll_request_form">
+                {% csrf_token %}
+                <p>
+                    <textarea id="roll_config" name="roll_config" rows="4" cols="20">Enter roll_config here!</textarea>
+                </p>
+                <button type="submit">Roll!</button>
+            </form><br>
+
+            <form id="die_form" class="interact">
+                <label>Die Information</label><br>
+                <div id="die_list">
+                    <label for="die_faces">Faces:</label>
+                    <input type="number", id="die_faces", name="die_faces" min="2" class="intinput"><br>
+                    <label for="die_advantage">Advantage:</label><br>
+                        <input type="radio" id="disadvantage" name="die_advantage" value="-1" class="radio">
+                            <label for="disadvantage" class="listfont">Disadvantage</label>
+                        <input type="radio" id="noadvantage" name="die_advantage" value="0" class="radio">
+                            <label for="noadvantage" class="listfont">No Advantage</label>
+                        <input type="radio" id="advantage" name="die_advantage" value="1" class="radio">
+                            <label for="advantage" class="listfont">Advantage</label>
+                </div>
+                <button type="button" onclick="adddie()" class="listfont">Add another die!</button>
+                <br><br>
+                <div id="modifier_list">
+                    <label for="modifiers">Modifier:</label>
+                    <input type="number", id="modifiers", name="modifiers" class="intinput">
+                </div><br>
+                <button type="button" onclick="addmodifier()" class="listfont">Add another modifier!</button>      
+            </form>        
+        </div>
+
+        <div class="queue subcontainer">
+            Dice to roll:
+            <button type="button" class="listfont interact queuebutton">Roll your dice!</button>
+        </div>
+
+        <div class="results subcontainer">
+            <div id="roll_result">
+                Result:
+            </div>
+        </div>
+
+        <div class="room subcontainer">
+            <div class="roominfo">
+                Room code: [placeholder]<br>
+                Room Population: [placeholder]
+            </div>
+            <div class="roomjoin">
+                Join a new room:<br>
+                <input type="text" name="roomname" id="roomname" placeholder="Type the room code here!"><button type="button" class="listfont interact">Join!</button>
+            </div>
+        </div>
+
+        <div class="thanks subcontainer">
+            Thank you for using this program!<br>Pigeons and doves rule!
+        </div>
+    </div>
+</body>
+
+{% endblock %}
