@@ -27,12 +27,38 @@ body {
     grid-column: col 3 / span 1;
     grid-row: row 3 / span 5;
     overflow-y: auto;
+    font-size: 80%;
 }
-.queuebutton{
+.queuebuttons{
     position: absolute;
-    bottom: 10px;
-    left: 20%;
-    right: 20%;
+    bottom: 5px;
+    font-size: 70%;
+}
+.queueroll{
+    left: 30%;
+    right: 30%;
+}
+.queuesave{
+    left: 5px;
+    right: 72%;
+}
+.queuereset{
+    left: 72%;
+    right: 5px;
+}
+.queuenamefield{
+    position: absolute;
+    bottom: 25px;
+    left: 5px;
+    right: 5px;
+    text-align: center;
+}
+.presetlist{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: fit-content;
+    font-size: 80%;
 }
 .results{
     background-color: #b1ebce;
@@ -107,7 +133,6 @@ p {
 .scroll{
     overflow-y: auto;
     height: auto;
-    
 }
 .interact{
     z-index: 1;
