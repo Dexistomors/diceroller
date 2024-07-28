@@ -131,19 +131,34 @@
                         <input type="radio" id="advantage" name="die_advantage" value="1" class="radio">
                             <label for="advantage" class="listfont">Advantage</label>
                 </div>
+
                 <button type="button" onclick="adddie()" class="listfont">Add another die!</button>
                 <br><br>
                 <div id="modifier_list">
                     <label for="modifiers">Modifier:</label>
                     <input type="number", id="modifiers", name="modifiers" class="intinput">
                 </div><br>
+
                 <button type="button" onclick="addmodifier()" class="listfont">Add another modifier!</button>      
             </form>        
         </div>
 
         <div class="queue subcontainer">
             Dice to roll:
-            <button type="button" class="listfont interact queuebutton">Roll your dice!</button>
+            <select name="Preset" id="loaded_preset" class="presetlist">
+                <option value="">None</option>
+                <option value="">testload1</option>
+                {% for i in user.RollConfig %}
+                <option value="">{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="queuenamefield">
+                <input type="text" name="Preset Name" placeholder="Roll Name" maxlength="10" size="12">                
+            </div>
+            <button type="button" class="interact queuesave queuebuttons">Save</button>
+            <button type="button" class="interact queueroll queuebuttons">Roll</button>
+            <button type="button" class="interact queuereset queuebuttons">Reset</button>
         </div>
 
         <div class="results subcontainer">

@@ -21,6 +21,7 @@ class RoomUser(models.Model):
 class RollConfig(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     roll_config = models.TextField()
+    name = models.TextField(default=None, blank=True, null=True, unique=True)
 
 class RollResult(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
