@@ -23,11 +23,20 @@ body {
 }
 .queue{
     position: relative;
-    background-color:dimgray;
+    background-color: dimgray;
     grid-column: col 3 / span 1;
     grid-row: row 3 / span 5;
     overflow-y: auto;
     font-size: 80%;
+}
+.queuefield{
+    position: absolute;
+    bottom: 51px;
+    top: 23px;
+    left: 5px;
+    right: 5px;
+    background-color: rgb(188, 188, 188);
+    overflow-y: auto;
 }
 .queuebuttons{
     position: absolute;
@@ -84,12 +93,20 @@ body {
     text-align: center;
 }
 .room{
-    background-color: yellowgreen;
+    background-color: rgb(154, 205, 50);
     grid-row: row 8 / span 1;
     grid-column: col / span 4;
     font-size: 80%;    
     display: grid;
     grid-template-columns: repeat(4, [col] 1fr ) ;
+}
+.roompop{
+    position: absolute;
+    top: 23px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background-color:rgb(204, 245, 121);
 }
 .roominfo{
     grid-column: col / span 3;

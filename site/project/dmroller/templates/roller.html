@@ -148,10 +148,12 @@
             <select name="Preset" id="loaded_preset" class="presetlist">
                 <option value="">None</option>
                 <option value="">testload1</option>
-                {% for i in user.RollConfig %}
-                <option value="">{{ i }}</option>
+                {% for r in rollconfigs %}
+                    <option value="">{{ r.name }}</option>
                 {% endfor %}
             </select>
+
+            <div class="queuefield"></div>
 
             <div class="queuenamefield">
                 <input type="text" name="Preset Name" placeholder="Roll Name" maxlength="10" size="12">                
@@ -169,12 +171,12 @@
 
         <div class="room subcontainer">
             <div class="roominfo">
-                Room code: [placeholder]<br>
-                Room Population: [placeholder]
+                Room code: [placeholder]
             </div>
+            <div class="room roominfo roompop">!!!!Names in Room should populate this location!!!!</div>
             <div class="roomjoin">
                 Join a new room:<br>
-                <input type="text" name="roomname" id="roomname" placeholder="Type the room code here!"><button type="button" class="listfont interact">Join!</button>
+                <input type="text" name="roomname" id="roomname" placeholder="room code" size="15"><button type="button" class="listfont interact">Join!</button>
             </div>
         </div>
 
