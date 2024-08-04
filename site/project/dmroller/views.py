@@ -57,14 +57,19 @@ def room(request):
             return HttpResponse(json.dumps(resp, indent=4))
         return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Bad Request'}}))
     
-    elif request.method == 'PUT':
-        #create a room and return room code
-        
-        pass
-
     elif request.method == 'POST':
         #add a user to this room with a room code
-        pass
-    #return error page
-    
-        
+        if 'room_code' in request.POST:
+            #create room if not exists and add current user
+            try:
+                room = Room.objects.get(room_code=request.POST.get('room_code'))
+            except Room.DoesNotExist:
+                room = Room(room_code=request.POST.get('room_code'))
+                room.save()
+            try:
+                RoomUser.objects.get(room=room, user=request.user)
+            except RoomUser.DoesNotExist:
+                room_user = RoomUser(user=request.user, room=room)
+                room_user.save()
+            return HttpResponse(json.dumps({'data': 'success'}))
+        return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Bad Request'}}))
