@@ -178,7 +178,11 @@
             <div class="room roominfo roompop">!!!!Names in Room should populate this location!!!!</div>
             <div class="roomjoin">
                 Join a new room:<br>
-                <input type="text" name="roomname" id="roomname" placeholder="room code" size="15"><button type="button" class="listfont interact">Join!</button>
+                <form method="post" action="{% url 'api_room' %}" id="room_request_form">
+                    {% csrf_token %}
+                    <input type="text" name="room_code" id="room_code" placeholder="room code" size="15">
+                    <button type="submit" class="listfont interact">Join!</button>
+                </form>
             </div>
         </div>
 
