@@ -68,6 +68,48 @@ class Roll:
     def get_final_value(self):
         return self.final_value
     
+    ## ADD pigeon here, pigeon being pigeon(self): and then returns prettified version of what user will see on the roll queue page, ie 1d4+2 ##
+    def pigeon(self):
+        tmp = {}
+        for die in self.dice:
+            key = str(die.faces) + 'a' + str(die.advantage)
+            if key not in tmp:
+                tmp[key] = 1
+            else:
+                tmp[key] = tmp[key] + 1
+        ## 1d4 + d3
+
+        finalstring = ''
+        delim = ' + '
+
+        for key in tmp:
+            count = tmp[key]
+            faces = key.split('a')[0]
+            advantage = key.split('a')[1]
+
+            if advantage == '1':
+                string_rep = 'adv({}d{})'.format(count, faces)
+            elif advantage == '-1':
+                string_rep = 'dis({}d{})'.format(count, faces)
+            else:
+                string_rep = '{}d{}'.format(count, faces)
+
+            if not finalstring:
+                finalstring = string_rep
+            else:
+                finalstring = finalstring + delim + string_rep
+
+        finalstring = finalstring = delim.join(self.modifiers)
+
+        return finalstring
+
+
+
+
+
+
+
+
     ## Takes a JSON string and returns a Roll object
     def deserialize(json_config):
         try:

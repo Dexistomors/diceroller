@@ -29,5 +29,9 @@ class RollResult:
             raise RollResultException("Could not serialize RollResult")
         return serialized_roll_result
     
+    # Takes a JSON formatted string and returns an instance of RollResult
+    def deserialize():
+        pass
+    
 class RollResultException(Exception):
     pass
