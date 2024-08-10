@@ -39,7 +39,7 @@ def room(request):
             #to get all rooms for this user
             room_codes = [r.room.room_code for r in RoomUser.objects.filter(user=request.user)]
             resp = {'data': room_codes}
-            return HttpResponse(json.dumps(resp, indent=4))   
+            return HttpResponse(json.dumps(resp, indent=4))
         elif 'room_code' in request.GET:
             #get all rollresults and configs for this room code
             try:
