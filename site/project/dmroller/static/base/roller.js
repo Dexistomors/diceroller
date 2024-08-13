@@ -9,6 +9,7 @@ $(document).ready(function() {
             $("#roll_result").html(roll_result);
         })
     })
+
     $("#room_request_form").on("submit", function(event) {
         event.preventDefault();
         let formValues = $(this).serialize();
@@ -17,6 +18,7 @@ $(document).ready(function() {
             let room_code = $("#room_code").val();
             if (result['data'] == 'success') {
                 $("#roomcode").text(room_code);
+                update_room_users();
             }
             else {
                 $("#roomcode").text(`Could not join room ${room_code}`);
@@ -24,6 +26,22 @@ $(document).ready(function() {
         })
     })
 })
+
+function update_room_users() {
+    let params = {};
+    let room_code = $("#room_code").val();
+    params['room_code'] = room_code;
+    params['users'] = 'yes';
+    $.get(url_room, params, function(result) {
+        result = JSON.parse(result);
+        if ('data' in result) {
+            let usernames = result['data'].sort().join(',');
+            $('#roompop').text(usernames);
+        } else {
+            console.log('Failed to fetch users from room');
+        }
+    })
+}
 
 var dynamic_input_count = 1;
 function adddie() {

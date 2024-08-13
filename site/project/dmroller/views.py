@@ -40,6 +40,14 @@ def room(request):
             room_codes = [r.room.room_code for r in RoomUser.objects.filter(user=request.user)]
             resp = {'data': room_codes}
             return HttpResponse(json.dumps(resp, indent=4))
+        elif 'room_code' in request.GET and 'users' in request.GET:
+            try:
+                room = Room.objects.get(room_code=request.GET.get('room_code'))
+            except Room.DoesNotExist:
+                return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'No rooms found'}}))
+            room_users = [r.user.username for r in RoomUser.objects.filter(room=room)]
+            resp = {'data': room_users}
+            return HttpResponse(json.dumps(resp, indent=4))
         elif 'room_code' in request.GET:
             #get all rollresults and configs for this room code
             try:
