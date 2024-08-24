@@ -45,6 +45,7 @@
                 <p>
                     <textarea id="roll_config" name="roll_config" rows="4" cols="20">Enter roll_config here!</textarea>
                 </p>
+                <input type="hidden" id="roll_request_room_code" name="room_code" value=""/>
                 <button type="submit">Roll!</button>
             </form><br>
 
@@ -94,7 +95,7 @@
         </div>
 
         <div class="results subcontainer">
-            <div id="roll_result">
+            <div id="roll_result" data-last-timestamp="">
                 Result:
             </div>
         </div>
@@ -104,14 +105,19 @@
                 Room code:<span id="roomcode">N/A</span>                
             </div>
             <div class="room roominfo roompop" id="roompop">
-                haha
             </div>
             <div class="roomjoin">
                 Join a new room:<br>
 
+                <datalist id="joinedrooms">
+                    {% for r in roomlist %}
+                        <option value="{{ r.room.room_code }}">{{ r.room.room_code }}</option>
+                    {% endfor %}
+                </datalist>
+
                 <form method="post" action="{% url 'api_room' %}" id="room_request_form">
                     {% csrf_token %}
-                    <input type="text" name="room_code" id="room_code" placeholder="room code" size="15">
+                    <input type="search" list="joinedrooms" name="room_code" id="room_code" placeholder="room code" size="15">
                     <button type="submit" class="listfont interact">Join!</button>
                 </form>
 

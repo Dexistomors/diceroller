@@ -2,11 +2,18 @@
 
 $(document).ready(function() {
     $("#roll_request_form").on("submit", function(event) {
-        event.preventDefault(); //prevents page from reloading on form submit
-        var formValues = $(this).serialize();
+        //event.preventDefault(); //prevents page from reloading on form submit
+        console.log('1');
+        //console.log(formValues);
+        let room_code = $("#room_code").val();
+        if (room_code != 'N/A') {
+            $("#roll_request_room_code").attr("value", room_code);
+        }
+        let formValues = $(this).serialize();
         //Submits post to 'roll' url with serialized formValues, callback will put results in div with id #result
         $.post(url_roller, formValues, function(roll_result) {
-            $("#roll_result").html(roll_result);
+            //$("#roll_result").html(roll_result);
+            poll_room();
         })
     })
 
@@ -25,7 +32,41 @@ $(document).ready(function() {
             }
         })
     })
+
+    setInterval(poll_room, 5000);
+
 })
+
+function poll_room() {
+    let room_code = $("#room_code").val();
+    if (room_code != 'N/A') {
+        let params = {};
+        params['room_code'] = room_code;
+        if ($('#roll_result').attr('data-last-timestamp')) {
+            params['date'] = $('#roll_result').attr('data-last-timestamp');
+        }
+        $.get(url_room, params, function(result) {
+            result = JSON.parse(result);
+            if ('data' in result) {
+                let roll_results = result['data']['roll_results'];
+                roll_results.forEach(function(r) {
+                    let tmp = `${r['date']}: ${r['user']}: ${r['prettify']}`;
+                    $('<div/>',{
+                        'text': tmp,
+                        'class': 'rollresponse',
+                        'data-timestamp': r['date']
+                    }).appendTo('#roll_result')
+                });
+                if (roll_results.length) {
+                    let most_recent_date = roll_results[roll_results.length - 1]['date'];
+                    $('#roll_result').attr('data-last-timestamp', most_recent_date);
+                }                
+            } else {
+                console.log('Failed to fetch roll_results from room');
+            }
+        });
+    }
+}
 
 function update_room_users() {
     let params = {};
