@@ -69,7 +69,7 @@ class Roll:
         return self.final_value
     
     ## ADD pigeon here, pigeon being pigeon(self): and then returns prettified version of what user will see on the roll queue page, ie 1d4+2 ##
-    def pigeon(self):
+    def prettify(self):
         tmp = {}
         for die in self.dice:
             key = str(die.faces) + 'a' + str(die.advantage)
@@ -98,8 +98,8 @@ class Roll:
                 finalstring = string_rep
             else:
                 finalstring = finalstring + delim + string_rep
-
-        finalstring = finalstring = delim.join(self.modifiers)
+        if self.modifiers:
+            finalstring = finalstring + delim + delim.join([str(x) for x in self.modifiers])
 
         return finalstring
 

@@ -29,3 +29,4 @@ class RollResult(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     roll_config = models.ForeignKey(RollConfig, on_delete=models.CASCADE)
     roll_result = models.TextField()
+    prettify = models.TextField()
