@@ -41,7 +41,7 @@ def api_roll(request):
 @login_required
 def roller(request):
     context = dict()
-    context['rollconfigs'] = RollConfig.objects.filter(user=request.user).iterator()
+    context['rollconfigs'] = RollConfig.objects.filter(user=request.user, name__isnull=False).iterator()
     context['roomlist'] = RoomUser.objects.filter(user=request.user).iterator()
     template = loader.get_template('roller.html')
     return HttpResponse(template.render(context, request))

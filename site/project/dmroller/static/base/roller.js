@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     $("#roll_request_form").on("submit", function(event) {
-        //event.preventDefault(); //prevents page from reloading on form submit
+        event.preventDefault(); //prevents page from reloading on form submit
         console.log('1');
         //console.log(formValues);
         let room_code = $("#room_code").val();
