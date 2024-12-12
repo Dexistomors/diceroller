@@ -148,3 +148,74 @@ function addmodifier() {
     new_p.append(new_input);
     input_div.append(new_p);
 }
+function jsDie(faces, advantage, id) {
+    this.faces = faces;
+    this.advantage = advantage;
+    this.id = id
+}
+function jsModifier(modifier, id){
+    this.modifier = modifier;
+    this.id = id
+}
+var dynamic_modifier_count = 1;
+var dynamic_die_count = 1;
+var dynamic_die_list = [];
+var dynamic_modifier_list = [];
+
+function _addDie(faces, advantage, dynamic_die_count) {
+    die_queue_list = $("#die_queue_list")
+    dynamic_die_list.push(jsDie(faces, advantage, dynamic_die_count));
+    for (i=0; i < dynamic_die_list.length; i++) {
+        for (faces in dynamic_die_list[i]);
+            _dieFace = faces;
+        if (dynamic_die_count > i) {      
+            var newDiv = document.createElement("p");
+            newDiv.innerHTML = ('<li> D'+_dieFace+'</li>');
+        }
+    }
+    die_queue_list.append(newDiv);
+    dynamic_die_count++;
+}
+function _addModifier(modifier, dynamic_modifier_count) {
+    modifier_queue_list = $("#modifier_queue_list")
+    dynamic_modifier_list.push(jsModifier(modifier, dynamic_modifier_count));
+    for (i=0; i < dynamic_modifier_list.length; i++) {
+        for (modifier in dynamic_modifier_list[i]);
+            _dieModifier = modifier;
+        if (dynamic_modifier_count > i) {
+            var newDiv2 = document.createElement("p");
+            newDiv2.innerHTML = ('<li>'+_dieModifier+'</li>');
+        }
+    }
+    modifier_queue_list.append(newDiv2);
+    dynamic_modifier_count++;
+}
+function checkoutdie() {
+    let faces = $("#die_faces").val();
+    let _radio = document.getElementsByName('die_advantage');
+    for (i = 0; i < _radio.length; i++) {
+        if (_radio[i].checked)
+            var _advantage =  _radio[i].value;
+    }
+    let advantage = _advantage
+    let modifier = $("#modifiers").val();
+    console.log(modifier);
+    if (faces === "" && advantage === undefined && modifier === "") {
+        console.log("Nothing to add to your roll!");
+    } else if (faces === "" && advantage == undefined) {
+        _addModifier(modifier, dynamic_modifier_count);
+        console.log('Modifier added!');
+        document.getElementById("die_form").reset();
+    } else if (modifier === "" ) {
+        _addDie(faces, advantage, dynamic_die_count);
+        console.log('Die added!');
+        document.getElementById("die_form").reset();
+    } else {
+        _addDie(faces, advantage, dynamic_die_count);
+        _addModifier(modifier, dynamic_modifier_count);
+        console.log('Die and Modifier added!');
+        document.getElementById("die_form").reset();
+    }
+}      
+
+

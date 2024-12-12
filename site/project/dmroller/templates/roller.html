@@ -54,7 +54,7 @@
                 <div id="die_list">
                     <label for="die_faces">Faces:</label>
                     <input type="number", id="die_faces", name="die_faces" min="2" class="intinput"><br>
-                    <label for="die_advantage">Advantage:</label><br>
+                    <label>Advantage:</label><br>
                         <input type="radio" id="disadvantage" name="die_advantage" value="-1" class="radio">
                             <label for="disadvantage" class="listfont">Disadvantage</label>
                         <input type="radio" id="noadvantage" name="die_advantage" value="0" class="radio">
@@ -69,7 +69,9 @@
                     <label for="modifiers">Modifier:</label>
                     <input type="number", id="modifiers", name="modifiers" class="intinput">
                 </div><br>
-                <button type="button" onclick="addmodifier()" class="listfont">Add another modifier!</button>      
+                <button type="button" onclick="addmodifier()" class="listfont">Add another modifier!</button>
+                
+                <button type="button" onclick="checkoutdie()" class="listfont">TEST BUTTON</button>
             </form>        
         </div>
 
@@ -82,7 +84,11 @@
                 {% endfor %}
             </select>
 
-            <div class="queuefield">                
+            <div class="queuefield">
+                <form id="die_queue">
+                    <div id="die_queue_list"><center>Your collection of dice:</center></div>
+                    <div id="modifier_queue_list"><center>Additional modifiers:</center></div>
+                </form>                
             </div>
 
             <div class="queuenamefield">
