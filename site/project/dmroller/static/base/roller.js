@@ -148,37 +148,60 @@ function addmodifier() {
     new_p.append(new_input);
     input_div.append(new_p);
 }
-function jsDie(faces, advantage, id) {
-    this.faces = faces;
-    this.advantage = advantage;
-    this.id = id
-}
-function jsModifier(modifier, id){
+
+function jsModifier(modifier, id) {
     this.modifier = modifier;
     this.id = id
 }
-var dynamic_modifier_count = 1;
-var dynamic_die_count = 1;
+
+
+
 var dynamic_die_list = [];
 var dynamic_modifier_list = [];
+var dynamic_modifier_count = 1;
+var dynamic_die_count = 1;
 
-function _addDie(faces, advantage, dynamic_die_count) {
-    die_queue_list = $("#die_queue_list")
-    dynamic_die_list.push(jsDie(faces, advantage, dynamic_die_count));
-    for (i=0; i < dynamic_die_list.length; i++) {
-        for (faces in dynamic_die_list[i]);
-            _dieFace = faces;
-        if (dynamic_die_count > i) {      
-            var newDiv = document.createElement("p");
-            newDiv.innerHTML = ('<li> D'+_dieFace+'</li>');
-        }
-    }
-    die_queue_list.append(newDiv);
+function _addDie(faces, advantage, id) {
     dynamic_die_count++;
+    die_queue_list = $("#die_queue_list");       
+    if (advantage == -1) {
+        _dieadvantage = ' with disadvantage';
+    } else if (advantage == 1) {
+        _dieadvantage = ' with advantage';
+    } else {
+        _dieadvantage = '';
+    }
+    finaladvantage = _dieadvantage
+    faces = faces;
+    advantage = advantage;
+    const dynamic_die_attributes = {
+        id: id,
+        innerHTML: 'D'+faces+finaladvantage,
+    }    
+    var _list = document.getElementById("die_queue_list")
+    var _items = _list.getElementsByTagName("li");
+    for (i=0; i<_items.length; i++) {
+        if ($(_items[i]).attr('data-faces') === faces) {
+            if ($(_items[i]).attr('data-advantage') === advantage) {
+                var _uniquecount = $(_items[i]).attr('data-count');
+                _uniquecount++;
+                console.log(_uniquecount);
+                _items[i].innerHTML = _uniquecount+'D'+faces+finaladvantage;
+                _items[i].setAttribute('data-count', _uniquecount);
+                return;
+            }
+        }        
+    }
+    var _li = Object.assign(document.createElement('li'), {...dynamic_die_attributes});
+    _li.setAttribute('data-faces', faces);
+    _li.setAttribute('data-advantage', advantage);
+    _li.setAttribute('data-count', 1);
+    die_queue_list.append(_li);
 }
-function _addModifier(modifier, dynamic_modifier_count) {
+function _addModifier(modifier, id) {
+    dynamic_modifier_count++;
     modifier_queue_list = $("#modifier_queue_list")
-    dynamic_modifier_list.push(jsModifier(modifier, dynamic_modifier_count));
+    dynamic_modifier_list.push(jsModifier(modifier, id));
     for (i=0; i < dynamic_modifier_list.length; i++) {
         for (modifier in dynamic_modifier_list[i]);
             _dieModifier = modifier;
@@ -188,25 +211,27 @@ function _addModifier(modifier, dynamic_modifier_count) {
         }
     }
     modifier_queue_list.append(newDiv2);
-    dynamic_modifier_count++;
 }
 function checkoutdie() {
+    
     let faces = $("#die_faces").val();
     let _radio = document.getElementsByName('die_advantage');
     for (i = 0; i < _radio.length; i++) {
-        if (_radio[i].checked)
-            var _advantage =  _radio[i].value;
+        if (_radio[i].checked) {
+            var _advantage =  _radio[i].value; 
+        }
     }
-    let advantage = _advantage
+    let advantage = _advantage;
     let modifier = $("#modifiers").val();
-    console.log(modifier);
-    if (faces === "" && advantage === undefined && modifier === "") {
+    if (faces === "" && modifier === "") {
         console.log("Nothing to add to your roll!");
-    } else if (faces === "" && advantage == undefined) {
+    } else if (modifier === "" && advantage === undefined) {
+        console.log("Need to select advantage!")
+    } else if (faces === "" && advantage === undefined) {
         _addModifier(modifier, dynamic_modifier_count);
         console.log('Modifier added!');
         document.getElementById("die_form").reset();
-    } else if (modifier === "" ) {
+    } else if (modifier === "") {
         _addDie(faces, advantage, dynamic_die_count);
         console.log('Die added!');
         document.getElementById("die_form").reset();
