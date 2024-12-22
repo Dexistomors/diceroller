@@ -198,8 +198,7 @@ function _addDie(faces, advantage, id) {
     dynamic_die_count++;
 }
 function _removeDie(id) {
-    var _die = document.getElementById(id)
-    console.log(_die);
+    var _die = document.getElementById(id);
     var _uniquecount = _die.getAttribute('data-count');
     var faces = _die.getAttribute('data-faces');
     var advantage = _die.getAttribute('data-advantage');
@@ -217,13 +216,24 @@ function _removeDie(id) {
     _libutton.type = 'button';
     _libutton.setAttribute('onclick', '_removeDie('+id+')');
     _libutton.setAttribute('class', 'listfont');
-    if (_uniquecount > 1) {
+    if (_uniquecount > 2) {
         _uniquecount--;
         _die.innerHTML = _uniquecount+'D'+faces+finaladvantage;
         _die.setAttribute('data-count', _uniquecount);
         _libutton.id = _die.getAttribute('id');
         _libutton.setAttribute('onclick', '_removeDie('+_libutton.id+')');
         _die.append(_libutton);
+    } else if (_uniquecount == 2) {
+        _uniquecount--;
+        _die.innerHTML = 'D'+faces+finaladvantage;
+        _die.setAttribute('data-count', _uniquecount);
+        _libutton.id = _die.getAttribute('id');
+        _libutton.setAttribute('onclick', '_removeDie('+_libutton.id+')');
+        _die.append(_libutton);
+    } else {
+        console.log("Die removed!");
+        var _list = document.getElementById("die_queue_list");
+        _list.removeChild(_die);
     }
 }
 function _addModifier(modifier, id) {
