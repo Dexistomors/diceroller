@@ -149,10 +149,18 @@ function addmodifier() {
     input_div.append(new_p);
 }
 
-
 var dynamic_modifier_count = 1;
 var dynamic_die_count = 1;
 
+function add_removediebutton(id) {
+    var _libutton = document.createElement('button');
+    _libutton.id = id;
+    _libutton.innerHTML = 'Remove';
+    _libutton.type = 'button';
+    _libutton.setAttribute('onclick', 'removeDie('+id+')');
+    _libutton.setAttribute('class', 'listfont');
+    return _libutton;
+}
 function _addDie(faces, advantage, id) {    
     die_queue_list = $("#die_queue_list");       
     if (advantage == -1) {
@@ -167,13 +175,8 @@ function _addDie(faces, advantage, id) {
         id: id,
         innerHTML: 'D'+faces+finaladvantage,
     }
-    var _libutton = document.createElement('button');
-    _libutton.id = id;
-    _libutton.innerHTML = 'Remove';
-    _libutton.type = 'button';
-    _libutton.setAttribute('onclick', '_removeDie('+id+')');
-    _libutton.setAttribute('class', 'listfont');    
-    var _list = document.getElementById("die_queue_list")
+    _libutton = add_removediebutton(id);
+    var _list = document.getElementById("die_queue_list");
     var _items = _list.getElementsByTagName("li");
     for (i=0; i<_items.length; i++) {
         if ($(_items[i]).attr('data-faces') === faces) {
@@ -183,7 +186,7 @@ function _addDie(faces, advantage, id) {
                 _items[i].innerHTML = _uniquecount+'D'+faces+finaladvantage;
                 _items[i].setAttribute('data-count', _uniquecount);
                 _libutton.id = $(_items[i]).attr('id');
-                _libutton.setAttribute('onclick', '_removeDie('+_libutton.id+')');
+                _libutton.setAttribute('onclick', 'removeDie('+_libutton.id+')');
                 _items[i].append(_libutton);
                 return;
             }
@@ -197,7 +200,7 @@ function _addDie(faces, advantage, id) {
     die_queue_list.append(_li);
     dynamic_die_count++;
 }
-function _removeDie(id) {
+function removeDie(id) {
     var _die = document.getElementById(id);
     var _uniquecount = _die.getAttribute('data-count');
     var faces = _die.getAttribute('data-faces');
@@ -210,25 +213,20 @@ function _removeDie(id) {
         _dieadvantage = '';
     }
     finaladvantage = _dieadvantage
-    var _libutton = document.createElement('button');
-    _libutton.id = id;
-    _libutton.innerHTML = 'Remove';
-    _libutton.type = 'button';
-    _libutton.setAttribute('onclick', '_removeDie('+id+')');
-    _libutton.setAttribute('class', 'listfont');
+    var _libutton = add_removediebutton(id);
     if (_uniquecount > 2) {
         _uniquecount--;
         _die.innerHTML = _uniquecount+'D'+faces+finaladvantage;
         _die.setAttribute('data-count', _uniquecount);
         _libutton.id = _die.getAttribute('id');
-        _libutton.setAttribute('onclick', '_removeDie('+_libutton.id+')');
+        _libutton.setAttribute('onclick', 'removeDie('+_libutton.id+')');
         _die.append(_libutton);
     } else if (_uniquecount == 2) {
         _uniquecount--;
         _die.innerHTML = 'D'+faces+finaladvantage;
         _die.setAttribute('data-count', _uniquecount);
         _libutton.id = _die.getAttribute('id');
-        _libutton.setAttribute('onclick', '_removeDie('+_libutton.id+')');
+        _libutton.setAttribute('onclick', 'removeDie('+_libutton.id+')');
         _die.append(_libutton);
     } else {
         console.log("Die removed!");
@@ -242,14 +240,18 @@ function _addModifier(modifier, id) {
     const dynamic_modifier_attributes = {
         id: id,
         innerHTML: modifier,
-    } 
+    }
+    var _libutton = add_removediebutton(id);
+    _libutton.setAttribute('onclick', 'removeModifier('+id+')');
     var _li = Object.assign(document.createElement('li'), {...dynamic_modifier_attributes});
     _li.setAttribute('data-modifier', modifier);
+    _li.appendChild(_libutton);
     modifier_queue_list.append(_li);
-    // create button here to call on _removeModifier() that shares ID
 }
-function _removeModifier(id) {
-    // remove li from ul
+function removeModifier(id) {
+    var _modifier = document.getElementById(id);
+    var _list = document.getElementById("modifier_queue_list");
+    _list.removeChild(_modifier);
 }
 function checkoutdie() {    
     let faces = $("#die_faces").val();
