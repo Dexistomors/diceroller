@@ -84,73 +84,7 @@ function update_room_users() {
     })
 }
 
-var dynamic_input_count = 1;
-function adddie() {
-    dynamic_input_count++;
-
-    var input_div = $("#die_list");
-    var new_input_id = "die_" + dynamic_input_count;
-    var new_p = document.createElement("p");
-    
-    new_p.textContent = "Faces: ";
-
-    var new_input = document.createElement("input");
-    new_input.setAttribute("id", new_input_id);
-    new_input.setAttribute("type", "number");
-    new_input.setAttribute("class", "intinput");
-    new_input.setAttribute("min", "2");
-
-    new_p.append(new_input);
-    input_div.append(new_p);
-
-    var new_p2 = document.createElement("p");
-    new_p2.innerHTML = "Advantage:<br>";
-    const advantage = {
-        "Disadvantage": false,
-        "No Advantage": false,
-        "Advantage": false,
-    }
-    for (let key in advantage) {
-        let label = document.createElement("label");
-        label.innerText = key;
-        label.setAttribute("class", "listfont");
-        label.setAttribute("for", "advantage");
-
-        let input = document.createElement("input");
-        input.setAttribute("id", new_input_id);
-        input.setAttribute("class", "radio");
-        input.setAttribute("name", "advantage");
-        input.type = "radio";
-        input.name = new_input_id;
-
-        input.addEventListener('change', () => {
-            Object.keys(data).forEach(key => {
-                data[key] = false;
-            })
-            data[key] = true;
-        });
-
-        new_p2.appendChild(input);
-        new_p2.appendChild(label);
-    }
-    input_div.append(new_p2);
-}
-function addmodifier() {
-    var input_div = $("#modifier_list");
-    var new_p = document.createElement("p");
-    
-    new_p.textContent = "Modifier: ";
-
-    var new_input = document.createElement("input");
-    new_input.setAttribute("type", "number");
-    new_input.setAttribute("class", "intinput");
-
-    new_p.append(new_input);
-    input_div.append(new_p);
-}
-
-var dynamic_modifier_count = 1;
-var dynamic_die_count = 1;
+var dynamic_count = 1;
 
 function add_removediebutton(id) {
     var _libutton = document.createElement('button');
@@ -198,7 +132,7 @@ function _addDie(faces, advantage, id) {
     _li.setAttribute('data-count', 1);    
     _li.appendChild(_libutton);
     die_queue_list.append(_li);
-    dynamic_die_count++;
+    dynamic_count++;
 }
 function removeDie(id) {
     var _die = document.getElementById(id);
@@ -235,7 +169,7 @@ function removeDie(id) {
     }
 }
 function _addModifier(modifier, id) {
-    dynamic_modifier_count++;
+    dynamic_count++;
     modifier_queue_list = $("#modifier_queue_list")
     const dynamic_modifier_attributes = {
         id: id,
@@ -249,8 +183,8 @@ function _addModifier(modifier, id) {
     modifier_queue_list.append(_li);
 }
 function removeModifier(id) {
-    var _modifier = document.getElementById(id);
     var _list = document.getElementById("modifier_queue_list");
+    var _modifier = document.getElementById(id);
     _list.removeChild(_modifier);
 }
 function checkoutdie() {    
@@ -268,19 +202,24 @@ function checkoutdie() {
     } else if (modifier === "" && advantage === undefined) {
         console.log("Need to select advantage!")
     } else if (faces === "" && advantage === undefined) {
-        _addModifier(modifier, dynamic_modifier_count);
+        _addModifier(modifier, dynamic_count);
         console.log('Modifier added!');
         document.getElementById("die_form").reset();
     } else if (modifier === "") {
-        _addDie(faces, advantage, dynamic_die_count);
+        _addDie(faces, advantage, dynamic_count);
         console.log('Die added!');
         document.getElementById("die_form").reset();
     } else {
-        _addDie(faces, advantage, dynamic_die_count);
-        _addModifier(modifier, dynamic_modifier_count);
+        _addDie(faces, advantage, dynamic_count);
+        _addModifier(modifier, dynamic_count);
         console.log('Die and Modifier added!');
         document.getElementById("die_form").reset();
     }
-}      
-
-
+}
+function resetdie() {
+    console.log("Die reset!");
+    var _dielist = document.getElementById("die_queue_list");
+    var _modlist = document.getElementById("modifier_queue_list");
+    while(_dielist.firstChild) _dielist.removeChild(_dielist.firstChild);
+    while(_modlist.firstChild) _modlist.removeChild(_modlist.firstChild);
+}
