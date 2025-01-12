@@ -81,19 +81,23 @@
             </select>
 
             <div class="queuefield">
-                <form id="die_queue">
+                <form id="die_queue">                    
                     <div><center>Your collection of dice:</center>
                         <ul id="die_queue_list"></ul></div>
                     <div><center>Additional modifiers:</center>
                         <ul id="modifier_queue_list"></ul></div>
-                </form>                
+                </form>
+                <form id="die_roller" input="hidden">
+                    {% csrf_token %}
+                    <input type="hidden" id="die_roller_room_code" name="room_code" value=""/>
+                </form>
             </div>
 
             <div class="queuenamefield">
                 <input type="text" name="Preset Name" placeholder="Roll Name" maxlength="10" size="12">                
             </div>
             <button type="button" class="interact queuesave queuebuttons">Save</button>
-            <button type="button" class="interact queueroll queuebuttons">Roll</button>
+            <button type="submit" form="die_roller" class="interact queueroll queuebuttons">Roll</button>
             <button type="button" class="interact queuereset queuebuttons" onclick="resetdie()">Reset</button>
         </div>
 
