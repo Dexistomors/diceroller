@@ -18,12 +18,13 @@ def login(request):
 @login_required
 def api_roll(request):
     roll_config_json = request.POST.get("roll_config")
+    print(roll_config_json)
     try:
         roll = diceroller.Roll.deserialize(roll_config_json)
         result = roll.roll().serialize()
         prettify = roll.prettify() + '=' + str(roll.final_value)
     except Exception as error:
-        return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config'}}))
+        return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config '+roll_config_json}}))
     
     if 'room_code' in request.POST and request.POST.get('room_code') and not request.POST.get('room_code') == 'N/A':
         room_code = request.POST.get('room_code')
