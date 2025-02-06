@@ -21,43 +21,19 @@ $(document).ready(function() {
         if (room_code != 'N/A') {
             $("#die_roller_room_code").attr("value", room_code);
         }
-        let formValues = {};
-        formValues['id'] = '789';
-        dieunorderedlist = document.getElementById('die_queue_list');
-        dielist = dieunorderedlist.getElementsByTagName('li');
-        var _dlist = []
-        for (i=0; i<dielist.length; i++) {
-            var count = dielist[i].getAttribute('data-count');
-            for (n=0; n<count; n++) {
-                die = {};
-                die['id'] = dielist[i].getAttribute('id');
-                die['faces'] = parseInt(dielist[i].getAttribute('data-faces'));
-                die['advantage'] = parseInt(dielist[i].getAttribute('data-advantage'));
-                die['reroll_rules'] = [];
-                _dlist.push(die);
-            }
+        var rollconfig = build_rollconfig();
+        if (rollconfig.dice === undefined || rollconfig.dice.length == 0) {
+            return;
+        } else {
+            var die_str = JSON.stringify(rollconfig);
+            let submit_roll = $('#die_roller').serializeArray();
+            submit_roll.push({name: "roll_config", value: die_str});
+            $.post(url_roller, submit_roll, function(roll_result) {
+                poll_room();
+            });
+            resetdie();
         }
-        formValues['dice'] = _dlist;
-        modunorderedlist = document.getElementById('modifier_queue_list');
-        modlist = modunorderedlist.getElementsByTagName('li');
-        var _mlist = []
-        for (i=0; i<modlist.length; i++) {
-            modifier = modlist[i].getAttribute('data-modifier');
-            _mlist.push(modifier);
-        }
-        formValues['modifiers'] = _mlist;
-        var die_str = JSON.stringify(formValues);
-        console.log(die_str); //TODO: use serializeArray instead of serialize, then add value to array
-        //var dieroller = document.getElementById('die_roller_list');
-        let submit_roll = $('#die_roller').serializeArray();
-        submit_roll.push({name: "roll_config", value: die_str});
-        console.log(submit_roll);
-        $.post(url_roller, submit_roll, function(roll_result) {
-            poll_room();
-        });
-        resetdie();
-        //document.getElementById("die_roller").submit();
-        //document.getElementById("die_roller_list").innerHTML = '';
+        
     })
 
     $("#room_request_form").on("submit", function(event) {
@@ -75,10 +51,37 @@ $(document).ready(function() {
             }
         })
     })
-
     setInterval(poll_room, 5000);
-
 })
+
+function build_rollconfig() {
+    let rollconfig = {};
+    rollconfig['id'] = '789';
+    dieunorderedlist = document.getElementById('die_queue_list');
+    dielist = dieunorderedlist.getElementsByTagName('li');
+    var _dlist = [];
+    for (i=0; i<dielist.length; i++) {
+        var count = dielist[i].getAttribute('data-count');
+        for (n=0; n<count; n++) {
+            die = {};
+            die['id'] = dielist[i].getAttribute('id');
+            die['faces'] = parseInt(dielist[i].getAttribute('data-faces'));
+            die['advantage'] = parseInt(dielist[i].getAttribute('data-advantage'));
+            die['reroll_rules'] = [];
+            _dlist.push(die);
+        }
+    }
+    rollconfig['dice'] = _dlist;
+    modunorderedlist = document.getElementById('modifier_queue_list');
+    modlist = modunorderedlist.getElementsByTagName('li');
+    var _mlist = [];
+    for (i=0; i<modlist.length; i++) {
+        modifier = parseInt(modlist[i].getAttribute('data-modifier'));
+        _mlist.push(modifier);
+    }
+    rollconfig['modifiers'] = _mlist;
+    return rollconfig;
+}
 
 function poll_room() {
     let room_code = $("#room_code").val();
