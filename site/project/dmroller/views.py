@@ -20,7 +20,8 @@ def login(request):
 def api_roll(request):
     roll_config_json = request.POST.get("roll_config")
     try:
-        roll = diceroller.Roll.deserialize(roll_config_json)
+        roll_config = diceroller.RollConfig.deserialize(roll_config_json)
+        roll = diceroller.RollConfig.create_roll(roll_config)
         result = roll.roll().serialize()
         prettify = roll.prettify() + '=' + str(roll.final_value)
     except Exception as error:
@@ -121,9 +122,12 @@ def api_rollconfig(request):
     elif request.method == 'POST':        
         try:
             roll_config = request.POST.get("roll_config")
-            roll_config_test = diceroller.Roll.deserialize(roll_config)
-            roll_config = RollConfig(user=request.user, roll_config=roll_config)
-            # using backend to run roll() to make sure all data is usable before saving roll_config
+            roll_name = request.POST.get("roll_name")
+            roll_config_test = diceroller.RollConfig.deserialize(roll_config)
+            roll_config_serialized = roll_config_test.serialize()
+            roll_config_save = RollConfig(user=request.user, roll_config=roll_config_serialized, name=roll_name)
+            roll_config_save.save()
+            
             
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))
