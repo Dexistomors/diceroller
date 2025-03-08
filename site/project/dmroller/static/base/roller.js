@@ -32,9 +32,10 @@ $(document).ready(function() {
                 poll_room();
             });
             resetdie();
-        }
-        
+        }        
     })
+
+    
 
     $("#room_request_form").on("submit", function(event) {
         event.preventDefault();
@@ -268,4 +269,14 @@ function resetdie() {
     var _modlist = document.getElementById("modifier_queue_list");
     while(_dielist.firstChild) _dielist.removeChild(_dielist.firstChild);
     while(_modlist.firstChild) _modlist.removeChild(_modlist.firstChild);
+}
+function savedie() {
+    let params = {};
+    let roll_config = build_rollconfig();
+    let roll_name = $('#save_name').val();
+    params['roll_config'] = roll_config;
+    params['roll_name'] = roll_name;
+    $.post(url_save, params, function(result) {
+        // finish function here for saving die queue for recall
+    })
 }

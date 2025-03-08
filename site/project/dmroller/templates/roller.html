@@ -11,6 +11,7 @@
 <script>
     var url_roller = "{% url 'api_roll' %}";
     var url_room = "{% url 'api_room' %}";
+    var url_save = "{% url 'api_rollconfig' %}";
 </script>
 <script src="{% static 'base/roller.js' %}"></script>
 
@@ -90,7 +91,7 @@
                 </form>
             </div>
             <div class="queuenamefield">
-                <input type="text" name="name" placeholder="Roll Name" maxlength="10" size="12" form="die_roller">                
+                <input type="text" id="save_name" name="name" placeholder="Roll Name" maxlength="10" size="12" form="die_roller">                
             </div>
             <button type="button" class="interact queuesave queuebuttons">Save</button>
             <button type="submit" form="die_roller" class="interact queueroll queuebuttons">Roll</button>
