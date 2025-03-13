@@ -127,7 +127,7 @@ def api_rollconfig(request):
             roll_config_serialized = roll_config_test.serialize()
             roll_config_save = RollConfig(user=request.user, roll_config=roll_config_serialized, name=roll_name)
             roll_config_save.save()
-            
+            return HttpResponse(json.dumps({'data': 'success'}))
             
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))

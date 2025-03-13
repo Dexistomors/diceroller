@@ -272,11 +272,35 @@ function resetdie() {
 }
 function savedie() {
     let params = {};
-    let roll_config = build_rollconfig();
+    let roll_config = JSON.stringify(build_rollconfig());
     let roll_name = $('#save_name').val();
     params['roll_config'] = roll_config;
     params['roll_name'] = roll_name;
     $.post(url_save, params, function(result) {
-        // finish function here for saving die queue for recall
+        result = JSON.parse(result);
+        if (result['data']) {
+            console.log('Save successful!');
+            $("#loaded_preset").reload();
+        } else {
+            console.log('Failed to save');
+        }
     })
+}
+function load_roll_config(roll_config) {
+    roll_config = roll_config.roll_config;
+    for (die in roll_config["dice"]) {
+        dynamic_count++;
+        let face = die["faces"].value();
+        let advantage = die["advantage"].value();
+        let id = dynamic_count;
+        _addDie(face, advantage, id);
+    }
+    for (modifiers in roll_config["modifiers"]) {
+        for (i=0; i<modifiers.length; i++) {
+            dynamic_count++;
+            let modifier = modifiers[i].value();
+            let id = dynamic_count;
+            _addModifier(modifier, id);            
+        }
+    }
 }
