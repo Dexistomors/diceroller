@@ -72,10 +72,10 @@
 
         <div class="queue subcontainer">
             Dice to roll:
-            <select name="Preset" id="loaded_preset" class="presetlist">
+            <select name="Preset" id="loaded_preset" class="presetlist" onchange="load_roll_config(this.value)">
                 <option value="">None</option>
                 {% for r in rollconfigs %}
-                    <option value="">{{ r.name }}</option>
+                    <option value="{{ r.roll_config }}" >{{ r.name }}</option>
                 {% endfor %}
             </select>
             <div class="queuefield">
