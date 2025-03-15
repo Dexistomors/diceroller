@@ -33,7 +33,6 @@ class RollConfig:
                 "modifiers": tmp_modifiers
             }
             final_config = json.dumps(tmp_config)
-            print(tmp_config)
             return final_config
         except:
             raise RollConfigException()

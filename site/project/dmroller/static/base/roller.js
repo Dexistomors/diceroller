@@ -287,20 +287,22 @@ function savedie() {
     })
 }
 function load_roll_config(roll_config) {
-    roll_config = roll_config.roll_config;
-    for (die in roll_config["dice"]) {
+    resetdie();
+    roll_config = JSON.parse(roll_config);
+    die_list = roll_config["dice"];
+    modifier_list = roll_config["modifiers"];
+    for (i=0; i<die_list.length; i++) {
+        die = die_list[i];
         dynamic_count++;
-        let face = die["faces"].value();
-        let advantage = die["advantage"].value();
+        let face = die.faces;
+        let advantage = die.advantage;
         let id = dynamic_count;
         _addDie(face, advantage, id);
-    }
-    for (modifiers in roll_config["modifiers"]) {
-        for (i=0; i<modifiers.length; i++) {
-            dynamic_count++;
-            let modifier = modifiers[i].value();
-            let id = dynamic_count;
-            _addModifier(modifier, id);            
-        }
-    }
+    }    
+    for (i=0; i<modifier_list.length; i++) {
+        dynamic_count++;
+        let modifier = modifier_list[i];
+        let id = dynamic_count;
+        _addModifier(modifier, id);            
+    }    
 }
