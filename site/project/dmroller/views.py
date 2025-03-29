@@ -123,12 +123,19 @@ def api_rollconfig(request):
         try:
             roll_config = request.POST.get("roll_config")
             roll_name = request.POST.get("roll_name")
+            #TODO: Filter through existing roll_config objects, if roll_name exists, replace
+            # that object's roll_config
+
+            #roll_config_list = RollConfig.objects.filter(user=request.user)                
             roll_config_test = diceroller.RollConfig.deserialize(roll_config)
             roll_config_serialized = roll_config_test.serialize()
+            #for roll_config_object in roll_config_list:
+            #    if roll_config_object.name == roll_name:
+            #        roll_config_object.roll_config = roll_config_serialized
+            #        roll_config_object.save()
             roll_config_save = RollConfig(user=request.user, roll_config=roll_config_serialized, name=roll_name)
             roll_config_save.save()
-            return HttpResponse(json.dumps({'data': 'success'}))
-            
+            return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))
 

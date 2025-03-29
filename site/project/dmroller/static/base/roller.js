@@ -264,7 +264,6 @@ function checkoutdie() {
     }
 }
 function resetdie() {
-    console.log("Die reset!");
     var _dielist = document.getElementById("die_queue_list");
     var _modlist = document.getElementById("modifier_queue_list");
     while(_dielist.firstChild) _dielist.removeChild(_dielist.firstChild);
@@ -276,11 +275,19 @@ function savedie() {
     let roll_name = $('#save_name').val();
     params['roll_config'] = roll_config;
     params['roll_name'] = roll_name;
+    let roll_config_existing_check = JSON.parse(roll_config);
+    let _die_list = roll_config_existing_check["dice"];
+    let _modifier_list = roll_config_existing_check["modifiers"];
+    if (_die_list.length == 0 && _modifier_list.length == 0){
+        console.log("Deletion if statement block triggered");
+        // Needs to submit a delete request
+        return;
+    }
     $.post(url_save, params, function(result) {
         result = JSON.parse(result);
         if (result['data']) {
             console.log('Save successful!');
-            $("#loaded_preset").reload();
+            $("#loaded_preset").reset();
         } else {
             console.log('Failed to save');
         }
@@ -288,21 +295,24 @@ function savedie() {
 }
 function load_roll_config(roll_config) {
     resetdie();
-    roll_config = JSON.parse(roll_config);
-    die_list = roll_config["dice"];
-    modifier_list = roll_config["modifiers"];
-    for (i=0; i<die_list.length; i++) {
-        die = die_list[i];
-        dynamic_count++;
-        let face = die.faces;
-        let advantage = die.advantage;
-        let id = dynamic_count;
-        _addDie(face, advantage, id);
-    }    
-    for (i=0; i<modifier_list.length; i++) {
-        dynamic_count++;
-        let modifier = modifier_list[i];
-        let id = dynamic_count;
-        _addModifier(modifier, id);            
+    if (roll_config){
+        roll_config = JSON.parse(roll_config);
+        die_list = roll_config["dice"];
+        modifier_list = roll_config["modifiers"];        
+        for (i=0; i<die_list.length; i++) {
+            die = die_list[i];
+            dynamic_count++;
+            let face = die.faces;
+            let advantage = die.advantage;
+            let id = dynamic_count;
+            _addDie(face, advantage, id);
+        }    
+        for (i=0; i<modifier_list.length; i++) {
+            dynamic_count++;
+            let modifier = modifier_list[i];
+            let id = dynamic_count;
+            _addModifier(modifier, id);            
+            
+        }
     }    
 }
