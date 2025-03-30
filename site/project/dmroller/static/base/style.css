@@ -1,0 +1,160 @@
+body {
+    font-size: 100%;
+    background-color: #AAAAAA;
+    height: auto;
+}
+.container {
+    display: grid;
+    position: relative;
+    height: 100%;
+    grid-gap: 10px;
+    grid-template-columns: repeat(5, [col] 1fr ) ;
+    grid-template-rows: repeat(8, [row] 1fr) ;
+}
+.subcontainer{
+    padding: 5px;
+}
+.dice{
+    background-color: #ccb2d1;
+    grid-column: col 1 / span 2;
+    grid-row: row 3 / span 5;
+    overflow-y: auto;
+    font-size: 80%;
+}
+.queue{
+    position: relative;
+    background-color: dimgray;
+    grid-column: col 3 / span 1;
+    grid-row: row 3 / span 5;
+    overflow-y: auto;
+    font-size: 80%;
+}
+.queuefield{
+    position: absolute;
+    bottom: 51px;
+    top: 23px;
+    left: 5px;
+    right: 5px;
+    background-color: rgb(188, 188, 188);
+    overflow-y: auto;
+}
+.queuebuttons{
+    position: absolute;
+    bottom: 5px;
+    font-size: 70%;
+}
+.queueroll{
+    left: 30%;
+    right: 30%;
+}
+.queuesave{
+    left: 5px;
+    right: 72%;
+}
+.queuereset{
+    left: 72%;
+    right: 5px;
+}
+.queuenamefield{
+    position: absolute;
+    bottom: 25px;
+    left: 5px;
+    right: 5px;
+    text-align: center;
+}
+.presetlist{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: fit-content;
+    font-size: 80%;
+}
+.results{
+    background-color: #b1ebce;
+    grid-column: col 4 / span 2;
+    grid-row: row 3 / span 5;
+    overflow-y: auto;
+}
+.top {
+    background-color: purple;
+    text-align: center;
+    align-content: center;
+    font-size: 120%;
+    grid-row: row 1 / span 1;
+    grid-column: col / span 5;
+}
+.top2 {
+    display: grid;
+    background-color: aqua;
+    grid-row: row 2 / span 1;
+    grid-column: col / span 5;
+    grid-template-columns: repeat(5, [col] 1fr ) ;
+    align-content: center;
+    text-align: center;
+}
+.room{
+    background-color: rgb(154, 205, 50);
+    grid-row: row 8 / span 1;
+    grid-column: col / span 4;
+    font-size: 80%;    
+    display: grid;
+    grid-template-columns: repeat(4, [col] 1fr ) ;
+}
+.roompop{
+    position: absolute;
+    top: 23px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background-color:rgb(204, 245, 121);
+}
+.roominfo{
+    grid-column: col / span 3;
+}
+.roomjoin{
+    grid-column: col 4 / span 1;
+    font-size: 65%;
+    align-content: center;
+    text-align: center;
+}
+.thanks{
+    background-color: salmon;
+    grid-row: row 8 / span 1;
+    grid-column: col 5 / span 1;
+    font-size: 65%;
+    align-content: center;
+    text-align: center;
+}
+.greeting{
+    grid-column: col / span 4;
+}
+.logout{
+    grid-column: col 5 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.intinput{
+    width: 7ch;
+}
+.listfont{
+    font-size: .75em;
+}
+.radio{
+    height: 10px;
+    width: 10px;
+}
+p {
+    margin:5
+}
+.scroll{
+    overflow-y: auto;
+    height: auto;
+}
+.interact{
+    z-index: 1;
+}
+.center{
+    align-content: center;
+    text-align: center;
+}

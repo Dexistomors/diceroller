@@ -1,0 +1,26 @@
+{% extends './base.html' %}
+
+{% block title %}
+    My DMRoller App
+{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="center">
+        <p>Welcome, {{ user.username }}!</p>
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">
+                Logout
+            </button>
+            <p>Let's roll some dice!</p>
+            <p><a href="{% url 'roller' %}">Roll here!</a></p>
+        </form>
+    </div>
+    {% else %}
+        <div class="center">
+            <p>Login is required.</p>
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+
+    {% endif %}        
+{% endblock %}

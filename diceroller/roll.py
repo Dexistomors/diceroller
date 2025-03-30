@@ -68,23 +68,76 @@ class Roll:
     def get_final_value(self):
         return self.final_value
     
+    def prettify(self):
+        tmp = {}
+        for die in self.dice:
+            key = str(die.faces) + 'a' + str(die.advantage)
+            if key not in tmp:
+                tmp[key] = 1
+            else:
+                tmp[key] = tmp[key] + 1
+        ## 1d4 + d3
+
+        finalstring = ''
+        delim = ' + '
+
+        for key in tmp:
+            count = tmp[key]
+            faces = key.split('a')[0]
+            advantage = key.split('a')[1]
+
+            if advantage == '1':
+                string_rep = 'adv({}d{})'.format(count, faces)
+            elif advantage == '-1':
+                string_rep = 'dis({}d{})'.format(count, faces)
+            else:
+                string_rep = '{}d{}'.format(count, faces)
+
+            if not finalstring:
+                finalstring = string_rep
+            else:
+                finalstring = finalstring + delim + string_rep
+        if self.modifiers:
+            finalstring = finalstring + delim + delim.join([str(x) for x in self.modifiers])
+
+        return finalstring
+
+
     ## Takes a JSON string and returns a Roll object
+    """
     def deserialize(json_config):
         try:
-            roll_config = json.loads(json_config)
+            try:
+                roll_config = json.loads(json_config)
+            except json.decoder.JSONDecodeError:
+                raise RollException("Invalid JSON; could not be parsed")
             id = roll_config.get('id')
             dice = []
             for dice_config in roll_config.get('dice'):
-                die_id = dice_config.get('id')
-                die_faces = dice_config.get('faces')
-                die_advantage = dice_config.get('advantage')
-                die_reroll_rules = dice_config.get('reroll_rules')
+                try:
+                    die_id = dice_config.get('id')
+                except ValueError:
+                    raise RollException("cannot parse data from 'id'")
+                try:    
+                    die_faces = dice_config.get('faces')
+                except ValueError:
+                    raise RollException("cannot parse data from 'faces'")
+                try:
+                    die_advantage = dice_config.get('advantage')
+                except ValueError:
+                    raise RollException("cannot parse data from 'advantage'")
+                try:
+                    die_reroll_rules = dice_config.get('reroll_rules')
+                except ValueError:
+                    raise RollException("cannot parse data from 'reroll_rules'")
                 dice.append(Die(die_faces, die_advantage, die_reroll_rules))
             modifiers = roll_config.get('modifiers')
-        except:
-            raise RollException("could not deserialize roll_config {}".format(json_config))
+        except RollException as failure:
+            raise RollException("could not deserialize roll_config: %s" % failure)
         roll = Roll(dice, modifiers)
         return roll
+        """
+
 
 class RollException(Exception):
     pass
