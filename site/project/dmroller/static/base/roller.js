@@ -1,20 +1,4 @@
-
-
-$(document).ready(function() {
-    $("#roll_request_form").on("submit", function(event) {
-        event.preventDefault(); //prevents page from reloading on form submit
-        let room_code = $("#room_code").val();
-        if (room_code != 'N/A') {
-            $("#roll_request_room_code").attr("value", room_code);
-        }
-        let formValues = $(this).serialize();
-        //Submits post to 'roll' url with serialized formValues, callback will put results in div with id #result
-        $.post(url_roller, formValues, function(roll_result) {
-            //$("#roll_result").html(roll_result);
-            poll_room();
-        })
-    })
-
+$(document).ready(function() {    
     $("#die_roller").on("submit", function(event) {
         event.preventDefault();
         let room_code = $("#room_code").val();
@@ -34,9 +18,6 @@ $(document).ready(function() {
             resetdie();
         }        
     })
-
-    
-
     $("#room_request_form").on("submit", function(event) {
         event.preventDefault();
         let formValues = $(this).serialize();

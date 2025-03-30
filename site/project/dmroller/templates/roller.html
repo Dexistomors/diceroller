@@ -40,15 +40,7 @@
             </div>
         </div>
 
-        <div class="dice interact subcontainer">
-            <form method="post" action="{% url 'api_roll' %}" id="roll_request_form">
-                {% csrf_token %}
-                <p>
-                    <textarea id="roll_config" name="roll_config" rows="4" cols="20">Enter roll_config here!</textarea>
-                </p>
-                <input type="hidden" id="roll_request_room_code" name="room_code" value=""/>
-                <button type="submit">Roll!</button>
-            </form><br>
+        <div class="dice interact subcontainer">            
             <form id="die_form" class="interact">
                 <label>Die Information:</label><br>
                 <div id="die_list">
