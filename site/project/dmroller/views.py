@@ -138,8 +138,6 @@ def api_rollconfig(request):
             return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))
-
-
         #TODO: take in POST data that includes roll_config and save to database under current user
         #TODO: Then return all roll_configs for current user
         pass

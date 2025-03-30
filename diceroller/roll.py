@@ -104,7 +104,8 @@ class Roll:
 
 
     ## Takes a JSON string and returns a Roll object
-    #def deserialize(json_config):
+    """
+    def deserialize(json_config):
         try:
             try:
                 roll_config = json.loads(json_config)
@@ -135,6 +136,7 @@ class Roll:
             raise RollException("could not deserialize roll_config: %s" % failure)
         roll = Roll(dice, modifiers)
         return roll
+        """
 
 
 class RollException(Exception):
