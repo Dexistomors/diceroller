@@ -14,6 +14,13 @@ class RollConfig:
     def create_roll(roll_config):
         roll = Roll(roll_config.dice_configs, roll_config.modifiers)
         return roll
+    
+    def set_name(self, name):
+        self.name = name
+
+    def set_config(self, config):
+        self.dice_configs = config.dice_configs
+        self.modifiers = config.modifiers
 
     def serialize(self):
         try:
@@ -66,8 +73,7 @@ class RollConfig:
                 dice.append(Die(die_faces, die_advantage, die_reroll_rules))
             modifiers = roll_config.get('modifiers')
         except RollConfigException as failure:
-            raise RollConfigException("could not deserialize roll_config: %s" % failure)
-        #roll_config = {"dice": dice, "modifiers": modifiers}
+            raise RollConfigException("could not deserialize roll_config: %s" % failure)        
         roll_config = RollConfig(dice, modifiers)
         return roll_config
 
