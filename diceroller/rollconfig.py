@@ -15,12 +15,11 @@ class RollConfig:
         roll = Roll(roll_config.dice_configs, roll_config.modifiers)
         return roll
     
-    def set_name(self, name):
-        self.name = name
-
-    def set_config(self, config):
-        self.dice_configs = config.dice_configs
-        self.modifiers = config.modifiers
+    def set_config(old_config, new_config):
+        old_config.dice_configs = new_config.dice_configs
+        old_config.modifiers = new_config.modifiers
+        old_config.roll_config = new_config.roll_config
+        return old_config
 
     def serialize(self):
         try:
