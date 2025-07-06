@@ -268,7 +268,11 @@ function savedie() {
         result = JSON.parse(result);
         if (result['data']) {
             console.log('Save successful!');
-            $("#loaded_preset").reset();
+            $.get(url_save, function(result) {
+                console.log("Requested JSON of RollConfigs for user")
+                console.log(JSON.parse(result))
+            })
+            //$("#loaded_preset").reset();
         } else {
             console.log('Failed to save');
         }

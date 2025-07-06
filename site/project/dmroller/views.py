@@ -116,8 +116,14 @@ def api_rollconfig(request):
     if request.method == 'GET':
         #TODO: return JSON with all roll_configs for current user
         if not request.GET:
-            roll_configs = [r.roll_config for r in RollConfig.objects.filter(user=request.user)]
-            resp = {'data': roll_configs}
+            roll_configs = RollConfig.objects.filter(user=request.user)
+            user_config_list = []
+            for user_single_config in roll_configs:
+                _user_config = {}
+                _user_config["name"] = user_single_config.name
+                _user_config["rollconfig"] = user_single_config.roll_config
+                user_config_list.append(_user_config)
+            resp = {'data': user_config_list}
             return HttpResponse(json.dumps(resp, indent=4))
     elif request.method == 'POST':
         #Taking in a configuration, checking over the existing RollConfig objects, 
