@@ -269,14 +269,38 @@ function savedie() {
         if (result['data']) {
             console.log('Save successful!');
             $.get(url_save, function(result) {
-                console.log("Requested JSON of RollConfigs for user")
-                console.log(JSON.parse(result))
+                console.log("Requested JSON of RollConfigs for user");
+                user_RollConfig_list = JSON.parse(result);
+                rebuild_dropdown_rollconfig(user_RollConfig_list.data);
             })
-            //$("#loaded_preset").reset();
         } else {
             console.log('Failed to save');
         }
     })
+}
+function rebuild_dropdown_rollconfig(user_RollConfig_list) {
+    clear_dropdown_rollconfig();
+    for (i=0; i<user_RollConfig_list.length; i++) {
+        user_RollConfig_object = user_RollConfig_list[i]
+        if(user_RollConfig_object && user_RollConfig_object.name) {
+            load_dropdown_rollconfig(user_RollConfig_object);
+        }
+    }
+}
+function clear_dropdown_rollconfig() {
+    _user_old_rollconfigs = document.getElementsByClassName("userconfig");
+    for (i=0; i<_user_old_rollconfigs.length; i++) {
+        _user_old_rollconfigs[i].remove();
+    }
+}
+
+function load_dropdown_rollconfig(RollConfig) {
+    user_dropdown_menu = document.getElementById("loaded_preset");
+    user_new_rollconfig = document.createElement("option");
+    user_new_rollconfig.value = RollConfig.rollconfig;
+    user_new_rollconfig.innerHTML = RollConfig.name;
+    user_new_rollconfig.className = "userconfig";
+    user_dropdown_menu.add(user_new_rollconfig);
 }
 function load_roll_config(roll_config) {
     resetdie();
