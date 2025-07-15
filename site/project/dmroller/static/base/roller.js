@@ -262,7 +262,6 @@ function savedie() {
     if (_die_list.length == 0 && _modifier_list.length == 0){
         remove_specific_dropdown_option(roll_name);
         // Needs to submit a delete request
-        return;
     }
     $.post(url_save, params, function(result) {
         result = JSON.parse(result);
@@ -270,6 +269,7 @@ function savedie() {
             console.log('Save successful!');
             $.get(url_save, function(result) {
                 user_RollConfig_list = JSON.parse(result);
+                clear_dropdown_rollconfig();
                 rebuild_dropdown_rollconfig(user_RollConfig_list.data);
             })
         } else {
@@ -277,8 +277,7 @@ function savedie() {
         }
     })
 }
-function rebuild_dropdown_rollconfig(user_RollConfig_list) {
-    clear_dropdown_rollconfig();
+function rebuild_dropdown_rollconfig(user_RollConfig_list) {    
     for (i=0; i<user_RollConfig_list.length; i++) {
         user_RollConfig_object = user_RollConfig_list[i]
         if(user_RollConfig_object && user_RollConfig_object.name) {
@@ -288,7 +287,7 @@ function rebuild_dropdown_rollconfig(user_RollConfig_list) {
 }
 function clear_dropdown_rollconfig() {
     _user_old_rollconfigs = document.getElementsByClassName("userconfig");
-    for (i=0; i<_user_old_rollconfigs.length; i++) {
+    for (i=_user_old_rollconfigs.length-1; i>=0; i--) {
         _user_old_rollconfigs[i].remove();
     }
 }

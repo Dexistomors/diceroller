@@ -138,7 +138,7 @@ def api_rollconfig(request):
                 if roll_config_object.name == roll_name:
                     old_roll_config_object = roll_config_object
                     new_roll_config_object.roll_config = serialized_roll_config
-                    old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)                    
+                    old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)
                     old_name_new_config.save()
                     return HttpResponse(json.dumps({'data': 'success'}))               
             roll_config_save = RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)

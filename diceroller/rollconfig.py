@@ -14,10 +14,10 @@ class RollConfig:
     def create_roll(roll_config):
         roll = Roll(roll_config.dice_configs, roll_config.modifiers)
         return roll
-    
+
     def set_config(old_config, new_config):
-        old_config.dice_configs = new_config.dice_configs
-        old_config.modifiers = new_config.modifiers
+        ##roll_config atribute is used in database saving for this object as a
+        ## JSON structure of the RollConfig object.
         old_config.roll_config = new_config.roll_config
         return old_config
 
