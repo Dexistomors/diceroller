@@ -260,16 +260,15 @@ function savedie() {
     let _die_list = roll_config_existing_check["dice"];
     let _modifier_list = roll_config_existing_check["modifiers"];
     if (_die_list.length == 0 && _modifier_list.length == 0){
-        console.log("Deletion if statement block triggered");
+        remove_specific_dropdown_option(roll_name);
         // Needs to submit a delete request
         return;
     }
     $.post(url_save, params, function(result) {
         result = JSON.parse(result);
-        if (result['data']) {
+        if (result['data'] && result['data'] == 'success') {
             console.log('Save successful!');
             $.get(url_save, function(result) {
-                console.log("Requested JSON of RollConfigs for user");
                 user_RollConfig_list = JSON.parse(result);
                 rebuild_dropdown_rollconfig(user_RollConfig_list.data);
             })
@@ -293,7 +292,14 @@ function clear_dropdown_rollconfig() {
         _user_old_rollconfigs[i].remove();
     }
 }
-
+function remove_specific_dropdown_option(name) {
+    user_rollconfig_dropdown = document.getElementById("loaded_preset");
+    for (i=0; i<user_rollconfig_dropdown.length; i++) {
+        if(user_rollconfig_dropdown[i].innerHTML == name){
+            user_rollconfig_dropdown.remove(i);
+        }
+    }
+}
 function load_dropdown_rollconfig(RollConfig) {
     user_dropdown_menu = document.getElementById("loaded_preset");
     user_new_rollconfig = document.createElement("option");

@@ -141,7 +141,7 @@ def api_rollconfig(request):
                     old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)                    
                     old_name_new_config.save()
                     return HttpResponse(json.dumps({'data': 'success'}))               
-            roll_config_save = RollConfig(user=request.user, dice_config=serialized_roll_config.dice_configs, modifiers=serialized_roll_config.modifiers, name=roll_name, roll_config=serialized_roll_config)
+            roll_config_save = RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)
             roll_config_save.save()
             return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:
