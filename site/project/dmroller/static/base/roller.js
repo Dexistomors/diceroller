@@ -125,27 +125,27 @@ function add_removediebutton(id) {
 }
 function _addDie(faces, advantage, id) {    
     die_queue_list = $("#die_queue_list");
-    finaladvantage = check_advantage(advantage);
+    advantage_as_string = check_advantage(advantage);
     const dynamic_die_attributes = {
         id: id,
-        innerHTML: 'D'+faces+finaladvantage,
+        innerHTML: 'D'+faces+advantage_as_string,
     }
     var _list = document.getElementById("die_queue_list");
     var _items = _list.getElementsByTagName("li");
-    var  ifexists = false
+    var  existance_check = false;
     for (i=0; i<_items.length; i++) {
         if ($(_items[i]).attr('data-faces') == faces && $(_items[i]).attr('data-advantage') == advantage) {
             var _uniquecount = $(_items[i]).attr('data-count');
             _uniquecount++;
-            _items[i].innerHTML = _uniquecount+'D'+faces+finaladvantage;
+            _items[i].innerHTML = _uniquecount+'D'+faces+advantage_as_string;
             _items[i].setAttribute('data-count', _uniquecount);            
             _re_added_delete_button_id = $(_items[i]).attr('id');
             _libutton = add_removediebutton(_re_added_delete_button_id);
             _items[i].append(_libutton);
-            ifexists = true
+            existance_check = true;
         }
     }
-    if (ifexists == false) {
+    if (existance_check == false) {
         _libutton = add_removediebutton(id);
         var _li = Object.assign(document.createElement('li'), {...dynamic_die_attributes});
         _li.setAttribute('data-faces', faces);
@@ -257,21 +257,28 @@ function savedie() {
     let _modifier_list = roll_config_existing_check["modifiers"];
     if (_die_list.length == 0 && _modifier_list.length == 0){
         remove_specific_dropdown_option(roll_name);
-        // Needs to submit a delete request
-    }
-    $.post(url_save, params, function(result) {
-        result = JSON.parse(result);
-        if (result['data'] && result['data'] == 'success') {
-            console.log('Save successful!');
-            $.get(url_save, function(result) {
-                user_RollConfig_list = JSON.parse(result);
-                clear_dropdown_rollconfig();
-                rebuild_dropdown_rollconfig(user_RollConfig_list.data);
-            })
-        } else {
-            console.log('Failed to save');
-        }
-    })
+        console.log("delete statement triggered");
+        params['marked_for_deletion'] = true;
+        $.post(url_save, params, function(result) {
+            result = JSON.parse(result);
+            if (result['data'] && result['data'] == 'success') {
+                console.log('Config removal successful!');
+            }
+        });
+    } else {
+        $.post(url_save, params, function(result) {
+            result = JSON.parse(result);
+            if (result['data'] && result['data'] == 'success') {
+                console.log('Save successful!');
+                $.get(url_save, function(result) {
+                    user_RollConfig_list = JSON.parse(result);
+                    clear_dropdown_rollconfig();
+                    rebuild_dropdown_rollconfig(user_RollConfig_list.data);
+                });
+            } else {
+                console.log('Failed to save');
+            }
+    })}
 }
 function rebuild_dropdown_rollconfig(user_RollConfig_list) {    
     for (i=0; i<user_RollConfig_list.length; i++) {
@@ -311,7 +318,6 @@ function load_roll_config(roll_config) {
         die_list = roll_config["dice"];
         modifier_list = roll_config["modifiers"];
         for (i=0; i<die_list.length; i++) {
-            console.log("load_roll_config die: " + i);
             die = die_list[i];
             let face = die.faces;
             let advantage = die.advantage;

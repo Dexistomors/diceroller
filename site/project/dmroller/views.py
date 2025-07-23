@@ -131,16 +131,21 @@ def api_rollconfig(request):
         try:
             roll_config = request.POST.get("roll_config")
             roll_name = request.POST.get("roll_name")
+            config_delete_request = request.POST.get("marked_for_deletion")
             roll_config_list = RollConfig.objects.filter(user=request.user)               
             new_roll_config_object = diceroller.RollConfig.deserialize(roll_config)
-            serialized_roll_config = new_roll_config_object.serialize()          
+            serialized_roll_config = new_roll_config_object.serialize()
+            print(config_delete_request)
             for roll_config_object in roll_config_list:
-                if roll_config_object.name == roll_name:
+                if roll_config_object.name == roll_name and config_delete_request == 'true':
+                    roll_config_object.delete()
+                    return HttpResponse(json.dumps({'data': 'successful deletion'}))
+                elif roll_config_object.name == roll_name:
                     old_roll_config_object = roll_config_object
                     new_roll_config_object.roll_config = serialized_roll_config
                     old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)
                     old_name_new_config.save()
-                    return HttpResponse(json.dumps({'data': 'success'}))               
+                    return HttpResponse(json.dumps({'data': 'success'}))
             roll_config_save = RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)
             roll_config_save.save()
             return HttpResponse(json.dumps({'data': 'success'}))            
