@@ -257,7 +257,6 @@ function savedie() {
     let _modifier_list = roll_config_existing_check["modifiers"];
     if (_die_list.length == 0 && _modifier_list.length == 0){
         remove_specific_dropdown_option(roll_name);
-        console.log("delete statement triggered");
         params['marked_for_deletion'] = true;
         $.post(url_save, params, function(result) {
             result = JSON.parse(result);

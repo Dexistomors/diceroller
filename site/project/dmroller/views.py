@@ -114,7 +114,6 @@ def room(request):
 @login_required
 def api_rollconfig(request):
     if request.method == 'GET':
-        #TODO: return JSON with all roll_configs for current user
         if not request.GET:
             roll_configs = RollConfig.objects.filter(user=request.user)
             user_config_list = []
@@ -126,8 +125,8 @@ def api_rollconfig(request):
             resp = {'data': user_config_list}
             return HttpResponse(json.dumps(resp, indent=4))
     elif request.method == 'POST':
-        #Taking in a configuration, checking over the existing RollConfig objects, 
-        #and either creating new, overwriting, or deleting objects accordingly.
+        # Taking in a configuration, checking over the existing RollConfig objects, 
+        # and either creating new, overwriting, or deleting objects accordingly.
         try:
             roll_config = request.POST.get("roll_config")
             roll_name = request.POST.get("roll_name")
@@ -135,11 +134,10 @@ def api_rollconfig(request):
             roll_config_list = RollConfig.objects.filter(user=request.user)               
             new_roll_config_object = diceroller.RollConfig.deserialize(roll_config)
             serialized_roll_config = new_roll_config_object.serialize()
-            print(config_delete_request)
             for roll_config_object in roll_config_list:
                 if roll_config_object.name == roll_name and config_delete_request == 'true':
                     roll_config_object.delete()
-                    return HttpResponse(json.dumps({'data': 'successful deletion'}))
+                    return HttpResponse(json.dumps({'data': 'success'}))
                 elif roll_config_object.name == roll_name:
                     old_roll_config_object = roll_config_object
                     new_roll_config_object.roll_config = serialized_roll_config
@@ -151,10 +149,4 @@ def api_rollconfig(request):
             return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))
-        #TODO: take in POST data that includes roll_config and save to database under current user
-        #TODO: Then return all roll_configs for current user
-        pass
-    elif request.method == 'DELETE':
-        #TODO: take in name of roll_config and delete from database, then return roll_config for current user
-        pass
     return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Bad Request'}}))

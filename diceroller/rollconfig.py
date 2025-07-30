@@ -16,7 +16,7 @@ class RollConfig:
         return roll
 
     def set_config(old_config, new_config):
-        ##roll_config atribute is used in database saving for this object as a
+        ## roll_config attribute is used in database saving for this object as a
         ## JSON structure of the RollConfig object.
         old_config.roll_config = new_config.roll_config
         return old_config
