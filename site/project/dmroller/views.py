@@ -114,34 +114,39 @@ def room(request):
 @login_required
 def api_rollconfig(request):
     if request.method == 'GET':
-        #TODO: return JSON with all roll_configs for current user
         if not request.GET:
-            roll_configs = [r.roll_config for r in RollConfig.objects.filter(user=request.user)]
-            resp = {'data': roll_configs}
+            roll_configs = RollConfig.objects.filter(user=request.user)
+            user_config_list = []
+            for user_single_config in roll_configs:
+                _user_config = {}
+                _user_config["name"] = user_single_config.name
+                _user_config["rollconfig"] = user_single_config.roll_config
+                user_config_list.append(_user_config)
+            resp = {'data': user_config_list}
             return HttpResponse(json.dumps(resp, indent=4))
-    elif request.method == 'POST':        
+    elif request.method == 'POST':
+        # Taking in a configuration, checking over the existing RollConfig objects, 
+        # and either creating new, overwriting, or deleting objects accordingly.
         try:
             roll_config = request.POST.get("roll_config")
             roll_name = request.POST.get("roll_name")
-            #TODO: Filter through existing roll_config objects, if roll_name exists, replace
-            # that object's roll_config
-
-            #roll_config_list = RollConfig.objects.filter(user=request.user)                
-            roll_config_test = diceroller.RollConfig.deserialize(roll_config)
-            roll_config_serialized = roll_config_test.serialize()
-            #for roll_config_object in roll_config_list:
-            #    if roll_config_object.name == roll_name:
-            #        roll_config_object.roll_config = roll_config_serialized
-            #        roll_config_object.save()
-            roll_config_save = RollConfig(user=request.user, roll_config=roll_config_serialized, name=roll_name)
+            config_delete_request = request.POST.get("marked_for_deletion")
+            roll_config_list = RollConfig.objects.filter(user=request.user)               
+            new_roll_config_object = diceroller.RollConfig.deserialize(roll_config)
+            serialized_roll_config = new_roll_config_object.serialize()
+            for roll_config_object in roll_config_list:
+                if roll_config_object.name == roll_name and config_delete_request == 'true':
+                    roll_config_object.delete()
+                    return HttpResponse(json.dumps({'data': 'success'}))
+                elif roll_config_object.name == roll_name:
+                    old_roll_config_object = roll_config_object
+                    new_roll_config_object.roll_config = serialized_roll_config
+                    old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)
+                    old_name_new_config.save()
+                    return HttpResponse(json.dumps({'data': 'success'}))
+            roll_config_save = RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)
             roll_config_save.save()
             return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config for save %s' % error}}))
-        #TODO: take in POST data that includes roll_config and save to database under current user
-        #TODO: Then return all roll_configs for current user
-        pass
-    elif request.method == 'DELETE':
-        #TODO: take in name of roll_config and delete from database, then return roll_config for current user
-        pass
     return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Bad Request'}}))

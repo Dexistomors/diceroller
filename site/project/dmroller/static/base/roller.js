@@ -124,57 +124,53 @@ function add_removediebutton(id) {
     return _libutton;
 }
 function _addDie(faces, advantage, id) {    
-    die_queue_list = $("#die_queue_list");       
-    if (advantage == -1) {
-        _dieadvantage = ' with disadvantage';
-    } else if (advantage == 1) {
-        _dieadvantage = ' with advantage';
-    } else {
-        _dieadvantage = '';
-    }
-    finaladvantage = _dieadvantage
+    die_queue_list = $("#die_queue_list");
+    advantage_as_string = check_advantage(advantage);
     const dynamic_die_attributes = {
         id: id,
-        innerHTML: 'D'+faces+finaladvantage,
+        innerHTML: 'D'+faces+advantage_as_string,
     }
-    _libutton = add_removediebutton(id);
     var _list = document.getElementById("die_queue_list");
     var _items = _list.getElementsByTagName("li");
+    var  existance_check = false;
     for (i=0; i<_items.length; i++) {
-        if ($(_items[i]).attr('data-faces') === faces) {
-            if ($(_items[i]).attr('data-advantage') === advantage) {
-                var _uniquecount = $(_items[i]).attr('data-count');
-                _uniquecount++;
-                _items[i].innerHTML = _uniquecount+'D'+faces+finaladvantage;
-                _items[i].setAttribute('data-count', _uniquecount);
-                _libutton.id = $(_items[i]).attr('id');
-                _libutton.setAttribute('onclick', 'removeDie('+_libutton.id+')');
-                _items[i].append(_libutton);
-                return;
-            }
-        }        
-    }        
-    var _li = Object.assign(document.createElement('li'), {...dynamic_die_attributes});
-    _li.setAttribute('data-faces', faces);
-    _li.setAttribute('data-advantage', advantage);
-    _li.setAttribute('data-count', 1);    
-    _li.appendChild(_libutton);
-    die_queue_list.append(_li);
-    dynamic_count++;
+        if ($(_items[i]).attr('data-faces') == faces && $(_items[i]).attr('data-advantage') == advantage) {
+            var _uniquecount = $(_items[i]).attr('data-count');
+            _uniquecount++;
+            _items[i].innerHTML = _uniquecount+'D'+faces+advantage_as_string;
+            _items[i].setAttribute('data-count', _uniquecount);            
+            _re_added_delete_button_id = $(_items[i]).attr('id');
+            _libutton = add_removediebutton(_re_added_delete_button_id);
+            _items[i].append(_libutton);
+            existance_check = true;
+        }
+    }
+    if (existance_check == false) {
+        _libutton = add_removediebutton(id);
+        var _li = Object.assign(document.createElement('li'), {...dynamic_die_attributes});
+        _li.setAttribute('data-faces', faces);
+        _li.setAttribute('data-advantage', advantage);
+        _li.setAttribute('data-count', 1);    
+        _li.appendChild(_libutton);
+        die_queue_list.append(_li);
+        dynamic_count++;
+    }
+}
+function check_advantage(advantage) {
+    if (advantage == -1) {
+        written_advantage = ' with disadvantage';
+    } else if (advantage == 1) {
+        written_advantage = ' with advantage';
+    } else {
+        written_advantage = '';
+    }
+    return written_advantage;
 }
 function removeDie(id) {
     var _die = document.getElementById(id);
     var _uniquecount = _die.getAttribute('data-count');
     var faces = _die.getAttribute('data-faces');
-    var advantage = _die.getAttribute('data-advantage');
-    if (advantage == -1) {
-        _dieadvantage = ' with disadvantage';
-    } else if (advantage == 1) {
-        _dieadvantage = ' with advantage';
-    } else {
-        _dieadvantage = '';
-    }
-    finaladvantage = _dieadvantage
+    finaladvantage = check_advantage(_die.getAttribute('data-advantage'));
     var _libutton = add_removediebutton(id);
     if (_uniquecount > 2) {
         _uniquecount--;
@@ -260,40 +256,79 @@ function savedie() {
     let _die_list = roll_config_existing_check["dice"];
     let _modifier_list = roll_config_existing_check["modifiers"];
     if (_die_list.length == 0 && _modifier_list.length == 0){
-        console.log("Deletion if statement block triggered");
-        // Needs to submit a delete request
-        return;
-    }
-    $.post(url_save, params, function(result) {
-        result = JSON.parse(result);
-        if (result['data']) {
-            console.log('Save successful!');
-            $("#loaded_preset").reset();
-        } else {
-            console.log('Failed to save');
+        remove_specific_dropdown_option(roll_name);
+        params['marked_for_deletion'] = true;
+        $.post(url_save, params, function(result) {
+            result = JSON.parse(result);
+            if (result['data'] && result['data'] == 'success') {
+                console.log('Config removal successful!');
+            }
+        });
+    } else {
+        $.post(url_save, params, function(result) {
+            result = JSON.parse(result);
+            if (result['data'] && result['data'] == 'success') {
+                console.log('Save successful!');
+                $.get(url_save, function(result) {
+                    user_RollConfig_list = JSON.parse(result);
+                    clear_dropdown_rollconfig();
+                    rebuild_dropdown_rollconfig(user_RollConfig_list.data);
+                });
+            } else {
+                console.log('Failed to save');
+            }
+    })}
+}
+function rebuild_dropdown_rollconfig(user_RollConfig_list) {    
+    for (i=0; i<user_RollConfig_list.length; i++) {
+        user_RollConfig_object = user_RollConfig_list[i]
+        if(user_RollConfig_object && user_RollConfig_object.name) {
+            load_dropdown_rollconfig(user_RollConfig_object);
         }
-    })
+    }
+}
+function clear_dropdown_rollconfig() {
+    _user_old_rollconfigs = document.getElementsByClassName("userconfig");
+    for (i=_user_old_rollconfigs.length; i>0; i--) {
+        _user_old_rollconfigs[i-1].remove();
+    }
+}
+function remove_specific_dropdown_option(name) {
+    user_rollconfig_dropdown = document.getElementById("loaded_preset");
+    for (i=0; i<user_rollconfig_dropdown.length; i++) {
+        if(user_rollconfig_dropdown[i].innerHTML == name){
+            user_rollconfig_dropdown.remove(i);
+        }
+    }
+}
+function load_dropdown_rollconfig(RollConfig) {
+    user_dropdown_menu = document.getElementById("loaded_preset");
+    user_new_rollconfig = document.createElement("option");
+    user_new_rollconfig.value = RollConfig.rollconfig;
+    user_new_rollconfig.innerHTML = RollConfig.name;
+    user_new_rollconfig.className = "userconfig";
+    user_dropdown_menu.add(user_new_rollconfig);
 }
 function load_roll_config(roll_config) {
     resetdie();
+    dynamic_count = 1;
     if (roll_config){
         roll_config = JSON.parse(roll_config);
         die_list = roll_config["dice"];
-        modifier_list = roll_config["modifiers"];        
+        modifier_list = roll_config["modifiers"];
         for (i=0; i<die_list.length; i++) {
             die = die_list[i];
-            dynamic_count++;
             let face = die.faces;
             let advantage = die.advantage;
             let id = dynamic_count;
             _addDie(face, advantage, id);
-        }    
-        for (i=0; i<modifier_list.length; i++) {
             dynamic_count++;
+        }
+        for (i=0; i<modifier_list.length; i++) {
             let modifier = modifier_list[i];
             let id = dynamic_count;
-            _addModifier(modifier, id);            
-            
+            _addModifier(modifier, id);
+            dynamic_count++;
         }
-    }    
+    }
 }

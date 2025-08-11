@@ -15,6 +15,12 @@ class RollConfig:
         roll = Roll(roll_config.dice_configs, roll_config.modifiers)
         return roll
 
+    def set_config(old_config, new_config):
+        ## roll_config attribute is used in database saving for this object as a
+        ## JSON structure of the RollConfig object.
+        old_config.roll_config = new_config.roll_config
+        return old_config
+
     def serialize(self):
         try:
             tmp_dice = []
@@ -66,8 +72,7 @@ class RollConfig:
                 dice.append(Die(die_faces, die_advantage, die_reroll_rules))
             modifiers = roll_config.get('modifiers')
         except RollConfigException as failure:
-            raise RollConfigException("could not deserialize roll_config: %s" % failure)
-        #roll_config = {"dice": dice, "modifiers": modifiers}
+            raise RollConfigException("could not deserialize roll_config: %s" % failure)        
         roll_config = RollConfig(dice, modifiers)
         return roll_config
 
