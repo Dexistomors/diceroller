@@ -1,4 +1,4 @@
-from dmroller.models import RollConfig, RoomUser, RollResult, Room
+from dmroller.models import User_RollConfig, RoomUser, RollResult, Room
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -34,7 +34,7 @@ def api_roll(request):
         except Room.DoesNotExist:
             return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'No rooms found'}}))
         
-        roll_config = RollConfig(user=request.user, roll_config=roll_config_json)
+        roll_config = User_RollConfig(user=request.user, roll_config=roll_config_json)
         roll_config.save()
         roll_result = RollResult(user=request.user, room=room, roll_config=roll_config, roll_result=result, prettify=prettify)
         roll_result.save()
@@ -43,7 +43,7 @@ def api_roll(request):
 @login_required
 def roller(request):
     context = dict()
-    context['rollconfigs'] = RollConfig.objects.filter(user=request.user, name__isnull=False).iterator()
+    context['user_rollconfigs'] = User_RollConfig.objects.filter(user=request.user, name__isnull=False).iterator()
     context['roomlist'] = RoomUser.objects.filter(user=request.user).iterator()
     template = loader.get_template('roller.html')
     return HttpResponse(template.render(context, request))
@@ -115,7 +115,7 @@ def room(request):
 def api_rollconfig(request):
     if request.method == 'GET':
         if not request.GET:
-            roll_configs = RollConfig.objects.filter(user=request.user)
+            roll_configs = User_RollConfig.objects.filter(user=request.user)
             user_config_list = []
             for user_single_config in roll_configs:
                 _user_config = {}
@@ -131,7 +131,7 @@ def api_rollconfig(request):
             roll_config = request.POST.get("roll_config")
             roll_name = request.POST.get("roll_name")
             config_delete_request = request.POST.get("marked_for_deletion")
-            roll_config_list = RollConfig.objects.filter(user=request.user)               
+            roll_config_list = User_RollConfig.objects.filter(user=request.user)               
             new_roll_config_object = diceroller.RollConfig.deserialize(roll_config)
             serialized_roll_config = new_roll_config_object.serialize()
             for roll_config_object in roll_config_list:
@@ -144,7 +144,7 @@ def api_rollconfig(request):
                     old_name_new_config = diceroller.RollConfig.set_config(old_roll_config_object, new_roll_config_object)
                     old_name_new_config.save()
                     return HttpResponse(json.dumps({'data': 'success'}))
-            roll_config_save = RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)
+            roll_config_save = User_RollConfig(user=request.user, name=roll_name, roll_config=serialized_roll_config)
             roll_config_save.save()
             return HttpResponse(json.dumps({'data': 'success'}))            
         except Exception as error:

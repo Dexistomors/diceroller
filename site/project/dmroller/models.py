@@ -18,7 +18,7 @@ class RoomUser(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
-class RollConfig(models.Model):
+class User_RollConfig(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     roll_config = models.TextField()
     name = models.TextField(default=None, blank=True, null=True, unique=True)
@@ -27,6 +27,6 @@ class RollResult(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    roll_config = models.ForeignKey(RollConfig, on_delete=models.CASCADE)
+    roll_config = models.ForeignKey(User_RollConfig, on_delete=models.CASCADE)
     roll_result = models.TextField()
     prettify = models.TextField()
