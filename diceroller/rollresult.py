@@ -4,7 +4,7 @@ import json
 class RollResult:
 
     def __init__(self, id, dice_results, modifiers, total):
-        self.id = id ##Need to validate id from roll
+        self.id = id
         self.dice_results = dice_results
         self.modifiers = modifiers
         self.total = total
@@ -28,10 +28,6 @@ class RollResult:
         except:
             raise RollResultException("Could not serialize RollResult")
         return serialized_roll_result
-    
-    # Takes a JSON formatted string and returns an instance of RollResult
-    def deserialize():
-        pass
-    
+        
 class RollResultException(Exception):
     pass

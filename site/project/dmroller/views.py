@@ -25,8 +25,7 @@ def api_roll(request):
         result = roll.roll().serialize()
         prettify = roll.prettify() + '=' + str(roll.final_value)
     except Exception as error:
-        return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config %s' % error}}))
-    
+        return HttpResponse(json.dumps({'error': {'code': 404, 'message': 'Could not parse roll_config %s' % error}}))    
     if 'room_code' in request.POST and request.POST.get('room_code') and not request.POST.get('room_code') == 'N/A':
         room_code = request.POST.get('room_code')
         try:            
