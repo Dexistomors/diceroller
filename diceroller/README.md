@@ -1,0 +1,1 @@
+This is a dicerolling app designed to take in json data, deserialize it into a roll configuration, and return an object containing several data points.
