@@ -38,9 +38,6 @@ class Roll:
         else:
             raise RollException("modifier not int")
 
-    def create_dice_from_dice_configs(self, dice_configs):
-        pass
-
     def add_die(self, die):
         self.dice.append(Roll._validate_die(die))
 
@@ -76,7 +73,6 @@ class Roll:
                 tmp[key] = 1
             else:
                 tmp[key] = tmp[key] + 1
-        ## 1d4 + d3
 
         finalstring = ''
         delim = ' + '
@@ -101,42 +97,6 @@ class Roll:
             finalstring = finalstring + delim + delim.join([str(x) for x in self.modifiers])
 
         return finalstring
-
-
-    ## Takes a JSON string and returns a Roll object
-    """
-    def deserialize(json_config):
-        try:
-            try:
-                roll_config = json.loads(json_config)
-            except json.decoder.JSONDecodeError:
-                raise RollException("Invalid JSON; could not be parsed")
-            id = roll_config.get('id')
-            dice = []
-            for dice_config in roll_config.get('dice'):
-                try:
-                    die_id = dice_config.get('id')
-                except ValueError:
-                    raise RollException("cannot parse data from 'id'")
-                try:    
-                    die_faces = dice_config.get('faces')
-                except ValueError:
-                    raise RollException("cannot parse data from 'faces'")
-                try:
-                    die_advantage = dice_config.get('advantage')
-                except ValueError:
-                    raise RollException("cannot parse data from 'advantage'")
-                try:
-                    die_reroll_rules = dice_config.get('reroll_rules')
-                except ValueError:
-                    raise RollException("cannot parse data from 'reroll_rules'")
-                dice.append(Die(die_faces, die_advantage, die_reroll_rules))
-            modifiers = roll_config.get('modifiers')
-        except RollException as failure:
-            raise RollException("could not deserialize roll_config: %s" % failure)
-        roll = Roll(dice, modifiers)
-        return roll
-        """
 
 
 class RollException(Exception):

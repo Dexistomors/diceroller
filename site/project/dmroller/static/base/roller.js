@@ -301,11 +301,11 @@ function remove_specific_dropdown_option(name) {
         }
     }
 }
-function load_dropdown_rollconfig(RollConfig) {
+function load_dropdown_rollconfig(User_RollConfig) {
     user_dropdown_menu = document.getElementById("loaded_preset");
     user_new_rollconfig = document.createElement("option");
-    user_new_rollconfig.value = RollConfig.rollconfig;
-    user_new_rollconfig.innerHTML = RollConfig.name;
+    user_new_rollconfig.value = User_RollConfig.rollconfig;
+    user_new_rollconfig.innerHTML = User_RollConfig.name;
     user_new_rollconfig.className = "userconfig";
     user_dropdown_menu.add(user_new_rollconfig);
 }

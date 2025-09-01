@@ -66,7 +66,7 @@
             Dice to roll:
             <select name="Preset" id="loaded_preset" class="presetlist" onchange="load_roll_config(this.value)">
                 <option value="">None</option>
-                {% for r in rollconfigs %}
+                {% for r in user_rollconfigs %}
                     <option value="{{ r.roll_config }}" class="userconfig">{{ r.name }}</option>
                 {% endfor %}
             </select>
